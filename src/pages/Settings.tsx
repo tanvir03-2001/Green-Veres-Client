@@ -1,0 +1,94 @@
+import React from 'react';
+
+const SettingsPage: React.FC = () => {
+  return (
+    <div className="min-h-full bg-gray-50">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <h1 className="text-2xl font-bold text-gray-900">সেটিংস</h1>
+          <p className="text-sm text-gray-600 mt-1">
+            আপনার একাউন্ট, নোটিফিকেশন আর ভাষা সংক্রান্ত সেটিংস এখানে ম্যানেজ করতে পারবেন।
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+        {/* Account Section */}
+        <section className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-900">একাউন্ট সেটিংস</h2>
+              <p className="text-xs text-gray-500">নাম, প্রোফাইল আর ইমেইল আপডেট করুন।</p>
+            </div>
+            <button className="px-3 py-1.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
+              প্রোফাইল এডিট করুন
+            </button>
+          </div>
+          <div className="grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
+            <div>
+              <p className="text-xs text-gray-500">নাম</p>
+              <p className="font-medium">মিজান রহমান</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">ইমেইল</p>
+              <p className="font-medium">mizan@example.com</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Notification Section */}
+        <section className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-900">নোটিফিকেশন</h2>
+              <p className="text-xs text-gray-500">কোন ধরনের নোটিফিকেশন আপনি পেতে চান ঠিক করুন।</p>
+            </div>
+          </div>
+          <div className="space-y-3 text-sm text-gray-700">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" defaultChecked className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600" />
+              <div>
+                <p className="font-medium">পোস্ট, কমেন্ট এবং রিয়্যাকশন</p>
+                <p className="text-xs text-gray-500">আপনার কনটেন্টে নতুন এক্টিভিটি হলে জানান।</p>
+              </div>
+            </label>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" defaultChecked className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600" />
+              <div>
+                <p className="font-medium">গ্রুপ আপডেট</p>
+                <p className="text-xs text-gray-500">আপনি যে গ্রুপগুলোতে আছেন সেগুলোর গুরুত্বপূর্ণ আপডেট।</p>
+              </div>
+            </label>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600" />
+              <div>
+                <p className="font-medium">প্রমোশনাল নোটিফিকেশন</p>
+                <p className="text-xs text-gray-500">অফার, নতুন ফিচার আর সাজেশন।</p>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        {/* Language Section */}
+        <section className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-900">ভাষা</h2>
+              <p className="text-xs text-gray-500">GreenVerse কোন ভাষায় ব্যবহার করতে চান সেট করুন।</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <button className="px-4 py-2 rounded-full bg-green-600 text-white font-semibold text-xs">
+              বাংলা (ডিফল্ট)
+            </button>
+            <button className="px-4 py-2 rounded-full bg-white border border-gray-200 text-gray-700 text-xs hover:border-green-200 hover:text-green-700">
+              English
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default SettingsPage;

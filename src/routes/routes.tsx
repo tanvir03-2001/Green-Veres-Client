@@ -8,6 +8,8 @@ import MyGardenPage from "../pages/MyGarden.tsx";
 import ReelsPage from "../pages/Reels.tsx";
 import LoginPage from "../pages/Login.tsx";
 import SignupPage from "../pages/Signup.tsx";
+import NotificationsPage from "../pages/Notifications.tsx";
+import SettingsPage from "../pages/Settings.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +47,14 @@ export const router = createBrowserRouter([
       {
         path: "my-garden",
         element: <MyGardenPage />,
+      },
+      {
+        path: "notifications",
+        element: <NotificationsPage />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
       }
     ],
   },
