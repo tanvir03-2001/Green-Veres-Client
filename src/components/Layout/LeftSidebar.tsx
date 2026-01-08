@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const LeftSidebar: React.FC = () => {
   return (
@@ -6,48 +7,91 @@ const LeftSidebar: React.FC = () => {
       <div className="p-4 flex-1 overflow-y-auto">
         {/* Navigation Links */}
         <nav className="space-y-2">
-          <a href="#" className="flex items-center space-x-3 p-3 rounded-lg bg-green-50 text-green-700">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }: { isActive: boolean }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+          >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
             <span className="font-medium">হোম</span>
-          </a>
+          </NavLink>
 
-          <a href="#" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+          <NavLink
+            to="/reels"
+            className={({ isActive }: { isActive: boolean }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+          >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
             </svg>
             <span className="font-medium">রিলস</span>
-          </a>
+          </NavLink>
 
-          <a href="#" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+          <NavLink
+            to="/shop"
+            className={({ isActive }: { isActive: boolean }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+          >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
             </svg>
             <span className="font-medium">দোকান</span>
-          </a>
+          </NavLink>
 
-          <a href="#" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+          <NavLink
+            to="/group"
+            className={({ isActive }: { isActive: boolean }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+          >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
             </svg>
             <span className="font-medium">গ্রুপ</span>
-          </a>
+          </NavLink>
 
-          <a href="#" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+          <NavLink
+            to="/library"
+            className={({ isActive }: { isActive: boolean }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+          >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
               <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
             </svg>
             <span className="font-medium">লাইব্রেরি</span>
-          </a>
+          </NavLink>
 
-          <a href="#" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+          <NavLink
+            to="/my-garden"
+            className={({ isActive }: { isActive: boolean }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+          >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
             <span className="font-medium">আমার বাগান</span>
-          </a>
+          </NavLink>
         </nav>
 
         {/* Divider */}
@@ -84,8 +128,8 @@ const LeftSidebar: React.FC = () => {
       </div>
 
       {/* User Profile - Fixed at Bottom */}
-      <div className="p-4 border-t border-gray-200 bg-white">
-        <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+      <div className="border-t border-gray-200 bg-white">
+        <div className="flex items-center space-x-3 py-2 px-6 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
           <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold">
             মি
           </div>

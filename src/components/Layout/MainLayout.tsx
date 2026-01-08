@@ -2,6 +2,7 @@ import React from 'react';
 import LeftSidebar from './LeftSidebar';
 import Feed from './Feed';
 import RightSidebar from './RightSidebar';
+import { Outlet } from 'react-router';
 
 const MainLayout: React.FC = () => {
   return (
@@ -49,7 +50,9 @@ const MainLayout: React.FC = () => {
       {/* Main Content Area - 100vh minus header */}
       <div className="flex flex-1 overflow-hidden">
         <LeftSidebar />
-        <Feed />
+        <div className='flex-1 h-full overflow-y-auto bg-gray-50'>
+          <Outlet />
+        </div>
         <RightSidebar />
       </div>
     </div>
