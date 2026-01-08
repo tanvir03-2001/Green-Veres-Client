@@ -6,8 +6,18 @@ import GroupPage from "../pages/Group.tsx";
 import LibraryPage from "../pages/Library.tsx";
 import MyGardenPage from "../pages/MyGarden.tsx";
 import ReelsPage from "../pages/Reels.tsx";
+import LoginPage from "../pages/Login.tsx";
+import SignupPage from "../pages/Signup.tsx";
 
 export const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/signup",
+    element: <SignupPage />,
+  },
   {
     path: "/",
     element: <App />,
