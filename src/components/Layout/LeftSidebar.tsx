@@ -1,7 +1,7 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
+import type { FC } from 'react';
 
-const LeftSidebar: React.FC = () => {
+const LeftSidebar: FC = () => {
   return (
     <aside className="w-64 h-full bg-white border-r border-gray-200 flex-shrink-0 flex flex-col">
       <div className="p-4 flex-1 overflow-y-auto">

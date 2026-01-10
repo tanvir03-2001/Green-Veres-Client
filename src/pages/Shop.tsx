@@ -1,15 +1,42 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
+import { shopAPI } from '../services/api';
 
 type Product = {
+  _id?: string;
   name: string;
-  price: string;
-  badge?: string;
+  price: number | string;
   description: string;
-  stock: string;
-  image: string;
+  stock: number | string;
+  images?: string[];
+  image?: string;
+  category?: string;
+  badge?: string;
 };
 
-const products: Product[] = [
+const ShopPage: FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await shopAPI.getProducts();
+      if (response.success) {
+        setProducts(response.data.products || []);
+      }
+    } catch (error) {
+      console.error('Failed to load products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const staticProducts: Product[] = [
   {
     name: "অর্কিড প্ল্যান্ট সেট",
     price: "৳১,৮৫০",
@@ -56,7 +83,6 @@ const products: Product[] = [
   },
 ];
 
-const ShopPage: React.FC = () => {
   return (
     <div className="min-h-full bg-gray-50">
       <div className="bg-white border-b border-gray-200">
@@ -104,35 +130,68 @@ const ShopPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
-            <div key={product.name} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <div className="h-40 bg-gray-100 overflow-hidden">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-4 space-y-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">{product.stock}</p>
-                    <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">লোড হচ্ছে...</div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {products.length > 0 ? (
+              products.map((product) => (
+                <div key={product._id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="h-40 bg-gray-100 overflow-hidden">
+                    <img 
+                      src={product.images && product.images.length > 0 ? product.images[0] : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800'} 
+                      alt={product.name} 
+                      className="w-full h-full object-cover" 
+                    />
                   </div>
-                  {product.badge && (
-                    <span className="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full">
-                      {product.badge}
-                    </span>
-                  )}
+                  <div className="p-4 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-sm text-gray-500">{typeof product.stock === 'number' ? (product.stock > 0 ? 'স্টকে আছে' : 'স্টক নেই') : product.stock}</p>
+                        <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-6">{product.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-bold text-green-700">৳{product.price}</span>
+                      <button className="px-4 py-2 text-sm font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors">
+                        কার্টে যোগ করুন
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-600 leading-6">{product.description}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-green-700">{product.price}</span>
-                  <button className="px-4 py-2 text-sm font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors">
-                    কার্টে যোগ করুন
-                  </button>
+              ))
+            ) : (
+              staticProducts.map((product, idx) => (
+                <div key={idx} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="h-40 bg-gray-100 overflow-hidden">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-sm text-gray-500">{product.stock}</p>
+                        <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
+                      </div>
+                      {product.badge && (
+                        <span className="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full">
+                          {product.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600 leading-6">{product.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-bold text-green-700">{product.price}</span>
+                      <button className="px-4 py-2 text-sm font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors">
+                        কার্টে যোগ করুন
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              ))
+            )}
+          </div>
+        )}
 
         <div className="bg-green-50 border border-green-100 rounded-2xl p-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>

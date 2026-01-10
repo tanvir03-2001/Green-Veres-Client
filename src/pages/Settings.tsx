@@ -1,6 +1,39 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 
-const SettingsPage: React.FC = () => {
+const SettingsPage: FC = () => {
+  const { user, updateUser } = useAuth();
+  const [formData, setFormData] = useState({
+    name: '',
+    bio: '',
+    location: '',
+    avatar: '',
+  });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        bio: user.bio || '',
+        location: user.location || '',
+        avatar: user.avatar || '',
+      });
+    }
+  }, [user]);
+
+  const handleSaveProfile = async () => {
+    try {
+      setSaving(true);
+      await updateUser(formData);
+      alert('প্রোফাইল আপডেট হয়েছে');
+    } catch (error: any) {
+      alert(error.message || 'আপডেট করতে সমস্যা হয়েছে');
+    } finally {
+      setSaving(false);
+    }
+  };
   return (
     <div className="min-h-full bg-gray-50">
       <div className="bg-white border-b border-gray-200">
@@ -20,18 +53,51 @@ const SettingsPage: React.FC = () => {
               <h2 className="text-sm font-semibold text-gray-900">একাউন্ট সেটিংস</h2>
               <p className="text-xs text-gray-500">নাম, প্রোফাইল আর ইমেইল আপডেট করুন।</p>
             </div>
-            <button className="px-3 py-1.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
-              প্রোফাইল এডিট করুন
+            <button 
+              onClick={handleSaveProfile}
+              disabled={saving}
+              className="px-3 py-1.5 text-xs font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+            >
+              {saving ? 'সেভ হচ্ছে...' : 'সেভ করুন'}
             </button>
           </div>
-          <div className="grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
+          <div className="space-y-3">
             <div>
-              <p className="text-xs text-gray-500">নাম</p>
-              <p className="font-medium">মিজান রহমান</p>
+              <label className="text-xs text-gray-500 block mb-1">নাম</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+              />
             </div>
             <div>
-              <p className="text-xs text-gray-500">ইমেইল</p>
-              <p className="font-medium">mizan@example.com</p>
+              <label className="text-xs text-gray-500 block mb-1">বায়ো</label>
+              <textarea
+                value={formData.bio}
+                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+                rows={3}
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-500 block mb-1">লোকেশন</label>
+              <input
+                type="text"
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
+              />
+            </div>
+            <div className="grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
+              <div>
+                <p className="text-xs text-gray-500">ইমেইল</p>
+                <p className="font-medium">{user?.email || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">ফোন</p>
+                <p className="font-medium">{user?.phone || 'N/A'}</p>
+              </div>
             </div>
           </div>
         </section>

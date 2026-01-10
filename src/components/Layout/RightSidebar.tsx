@@ -1,6 +1,6 @@
-import React from 'react';
+import type { FC } from 'react';
 
-const RightSidebar: React.FC = () => {
+const RightSidebar: FC = () => {
   return (
     <aside className="w-80 h-full bg-white border-l border-gray-200 flex-shrink-0 overflow-y-auto">
       <div className="p-4">

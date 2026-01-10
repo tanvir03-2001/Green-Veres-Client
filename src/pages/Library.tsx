@@ -1,15 +1,42 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
+import { libraryAPI } from '../services/api';
 
 type Resource = {
+  _id?: string;
   title: string;
   type: 'article' | 'guide' | 'video';
   duration?: string;
   level: 'beginner' | 'intermediate' | 'advanced';
-  badge?: string;
   description: string;
+  content?: string;
+  url?: string;
+  badge?: string;
 };
 
-const resources: Resource[] = [
+const LibraryPage: FC = () => {
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadResources();
+  }, []);
+
+  const loadResources = async () => {
+    try {
+      setLoading(true);
+      const response = await libraryAPI.getResources();
+      if (response.success) {
+        setResources(response.data.resources || []);
+      }
+    } catch (error) {
+      console.error('Failed to load resources:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const staticResources: Resource[] = [
   {
     title: "শুরুর জন্য ইনডোর গার্ডেনিং গাইড",
     type: "guide",
@@ -54,7 +81,6 @@ const typeLabel: Record<Resource['type'], string> = {
   video: "ভিডিও",
 };
 
-const LibraryPage: React.FC = () => {
   return (
     <div className="min-h-full bg-gray-50">
       <div className="bg-white border-b border-gray-200">
@@ -95,43 +121,47 @@ const LibraryPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          {resources.map((item) => (
-            <div
-              key={item.title}
-              className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-3"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
-                    <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 font-medium">
-                      {typeLabel[item.type]}
-                    </span>
-                    <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 font-medium">
-                      {levelLabel[item.level]}
-                    </span>
-                    {item.duration && <span>{item.duration}</span>}
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">লোড হচ্ছে...</div>
+        ) : (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {(resources.length > 0 ? resources : staticResources).map((item) => (
+              <div
+                key={item._id || item.title}
+                className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-3"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                      <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 font-medium">
+                        {typeLabel[item.type]}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 font-medium">
+                        {levelLabel[item.level]}
+                      </span>
+                      {item.duration && <span>{item.duration}</span>}
+                    </div>
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">{item.title}</h2>
                   </div>
-                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">{item.title}</h2>
                 </div>
-                {item.badge && (
-                  <span className="px-3 py-1 text-[11px] font-semibold bg-green-50 text-green-700 rounded-full whitespace-nowrap">
-                    {item.badge}
-                  </span>
-                )}
+                <p className="text-sm text-gray-600 leading-6">{item.description}</p>
+                <div className="flex items-center justify-between pt-1">
+                  <a 
+                    href={item.url || '#'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-green-700 hover:text-green-800"
+                  >
+                    এখনই পড়ুন
+                  </a>
+                  <button className="px-3 py-1.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
+                    পরে রাখুন
+                  </button>
+                </div>
               </div>
-              <p className="text-sm text-gray-600 leading-6">{item.description}</p>
-              <div className="flex items-center justify-between pt-1">
-                <button className="text-sm font-semibold text-green-700 hover:text-green-800">
-                  এখনই পড়ুন
-                </button>
-                <button className="px-3 py-1.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
-                  পরে রাখুন
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="bg-green-50 border border-green-100 rounded-2xl p-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>

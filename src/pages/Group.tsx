@@ -1,15 +1,60 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
+import { groupsAPI } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 
 type Group = {
+  _id?: string;
   name: string;
-  members: string;
+  members: string[] | string;
   privacy: 'public' | 'private';
-  badge?: string;
   description: string;
-  cover: string;
+  cover?: string;
+  category?: string;
+  isMember?: boolean;
+  badge?: string;
 };
 
-const groups: Group[] = [
+const GroupPage: FC = () => {
+  const { isAuthenticated } = useAuth();
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadGroups();
+  }, []);
+
+  const loadGroups = async () => {
+    try {
+      setLoading(true);
+      const response = await groupsAPI.getGroups();
+      if (response.success) {
+        setGroups(response.data.groups || []);
+      }
+    } catch (error) {
+      console.error('Failed to load groups:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleJoinGroup = async (groupId: string) => {
+    if (!isAuthenticated) {
+      alert('গ্রুপে যোগ দিতে লগইন করুন');
+      return;
+    }
+
+    try {
+      const response = await groupsAPI.joinGroup(groupId);
+      if (response.success) {
+        loadGroups();
+      }
+    } catch (error: any) {
+      alert(error.message || 'গ্রুপে যোগ দিতে সমস্যা হয়েছে');
+    }
+  };
+
+  const staticGroups: Group[] = [
   {
     name: "ঢাকা আরবান গার্ডেনারস",
     members: "১২.৪কে সদস্য",
@@ -43,7 +88,6 @@ const groups: Group[] = [
   },
 ];
 
-const GroupPage: React.FC = () => {
   return (
     <div className="min-h-full bg-gray-50">
       <div className="bg-white border-b border-gray-200">
@@ -84,50 +128,110 @@ const GroupPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          {groups.map((group) => (
-            <div
-              key={group.name}
-              className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
-            >
-              <div className="h-32 bg-gray-100 overflow-hidden">
-                <img src={group.cover} alt={group.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-4 space-y-3 flex-1 flex flex-col">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">{group.name}</h2>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {group.members} · {group.privacy === "public" ? "পাবলিক গ্রুপ" : "প্রাইভেট গ্রুপ"}
-                    </p>
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">লোড হচ্ছে...</div>
+        ) : (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {groups.length > 0 ? (
+              groups.map((group) => (
+                <div
+                  key={group._id}
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
+                >
+                  <div className="h-32 bg-gray-100 overflow-hidden">
+                    <img 
+                      src={group.cover || 'https://images.unsplash.com/photo-1454311073588-182526194ad3?w=1200'} 
+                      alt={group.name} 
+                      className="w-full h-full object-cover" 
+                    />
                   </div>
-                  {group.badge && (
-                    <span className="px-3 py-1 text-[11px] font-semibold bg-green-50 text-green-700 rounded-full">
-                      {group.badge}
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-gray-600 leading-6 flex-1">{group.description}</p>
-                <div className="flex items-center justify-between pt-2">
-                  <div className="flex -space-x-2">
-                    <div className="w-7 h-7 rounded-full bg-green-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">
-                      মি
+                  <div className="p-4 space-y-3 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-900">{group.name}</h2>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {Array.isArray(group.members) ? group.members.length : group.members} সদস্য · {group.privacy === "public" ? "পাবলিক গ্রুপ" : "প্রাইভেট গ্রুপ"}
+                        </p>
+                      </div>
                     </div>
-                    <div className="w-7 h-7 rounded-full bg-emerald-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">
-                      আ
-                    </div>
-                    <div className="w-7 h-7 rounded-full bg-lime-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">
-                      র
+                    <p className="text-sm text-gray-600 leading-6 flex-1">{group.description}</p>
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex -space-x-2">
+                        {Array.isArray(group.members) ? (
+                          group.members.slice(0, 3).map((member: any, idx: number) => (
+                            <div key={idx} className="w-7 h-7 rounded-full bg-green-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">
+                              {typeof member === 'object' && member.name ? member.name.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                          ))
+                        ) : (
+                          <>
+                            <div className="w-7 h-7 rounded-full bg-green-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">মি</div>
+                            <div className="w-7 h-7 rounded-full bg-emerald-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">আ</div>
+                            <div className="w-7 h-7 rounded-full bg-lime-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">র</div>
+                          </>
+                        )}
+                      </div>
+                      <button 
+                        onClick={() => group._id && handleJoinGroup(group._id)}
+                        disabled={group.isMember}
+                        className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
+                          group.isMember 
+                            ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+                            : 'bg-green-600 text-white hover:bg-green-700'
+                        }`}
+                      >
+                        {group.isMember ? 'যোগ দেওয়া হয়েছে' : 'গ্রুপে যোগ দিন'}
+                      </button>
                     </div>
                   </div>
-                  <button className="px-4 py-2 text-sm font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors">
-                    গ্রুপে যোগ দিন
-                  </button>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              ))
+            ) : (
+              staticGroups.map((group, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
+                >
+                  <div className="h-32 bg-gray-100 overflow-hidden">
+                    <img src={group.cover} alt={group.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="p-4 space-y-3 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-900">{group.name}</h2>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {typeof group.members === 'string' ? group.members : group.members.length} · {group.privacy === "public" ? "পাবলিক গ্রুপ" : "প্রাইভেট গ্রুপ"}
+                        </p>
+                        {group.badge && (
+                          <span className="px-3 py-1 text-[11px] font-semibold bg-green-50 text-green-700 rounded-full">
+                            {group.badge}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-6 flex-1">{group.description}</p>
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex -space-x-2">
+                        <div className="w-7 h-7 rounded-full bg-green-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">
+                          মি
+                        </div>
+                        <div className="w-7 h-7 rounded-full bg-emerald-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">
+                          আ
+                        </div>
+                        <div className="w-7 h-7 rounded-full bg-lime-500 border-2 border-white text-[11px] flex items-center justify-center text-white font-semibold">
+                          র
+                        </div>
+                      </div>
+                      <button className="px-4 py-2 text-sm font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors">
+                        গ্রুপে যোগ দিন
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
         <div className="bg-green-50 border border-green-100 rounded-2xl p-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>

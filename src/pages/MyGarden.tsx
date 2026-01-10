@@ -1,4 +1,7 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { authAPI } from '../services/api';
 
 type Plant = {
   name: string;
@@ -8,7 +11,39 @@ type Plant = {
   location: string;
 };
 
-const plants: Plant[] = [
+const MyGardenPage: FC = () => {
+  const { user } = useAuth();
+  const [plants, setPlants] = useState<Plant[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadGarden();
+  }, [user]);
+
+  const loadGarden = async () => {
+    try {
+      setLoading(true);
+      if (user) {
+        const response = await authAPI.getProfile();
+        if (response.success && response.data.user.garden?.plants) {
+          const gardenPlants = response.data.user.garden.plants.map((plant: any) => ({
+            name: plant.name,
+            type: plant.type,
+            status: plant.status,
+            lastWatered: plant.lastWatered ? new Date(plant.lastWatered).toLocaleDateString('bn-BD') : 'কখনো না',
+            location: plant.location,
+          }));
+          setPlants(gardenPlants);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load garden:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const staticPlants: Plant[] = [
   {
     name: "মানি প্ল্যান্ট",
     type: "ইনডোর · লতা",
@@ -53,7 +88,6 @@ const statusColor: Record<Plant['status'], string> = {
   new: "bg-violet-50 text-violet-700",
 };
 
-const MyGardenPage: React.FC = () => {
   return (
     <div className="min-h-full bg-gray-50">
       <div className="bg-white border-b border-gray-200">
@@ -98,10 +132,13 @@ const MyGardenPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          {plants.map((plant) => (
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">লোড হচ্ছে...</div>
+        ) : (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {(plants.length > 0 ? plants : staticPlants).map((plant, idx) => (
             <div
-              key={plant.name}
+              key={idx}
               className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-3"
             >
               <div className="flex items-start justify-between gap-3">
@@ -132,8 +169,9 @@ const MyGardenPage: React.FC = () => {
                 </button>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="bg-green-50 border border-green-100 rounded-2xl p-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>

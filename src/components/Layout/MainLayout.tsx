@@ -1,10 +1,22 @@
-import React from 'react';
+import { useNavigate } from 'react-router';
+import type { FC } from 'react';
 import LeftSidebar from './LeftSidebar';
-import Feed from './Feed';
 import RightSidebar from './RightSidebar';
 import { Outlet } from 'react-router';
+import { useAuth } from '../../contexts/AuthContext';
 
-const MainLayout: React.FC = () => {
+const MainLayout: FC = () => {
+  const { user, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const getInitials = (name: string) => {
+    return name.charAt(0).toUpperCase();
+  };
   return (
     <div className="w-screen h-screen bg-gray-50 overflow-hidden flex flex-col">
       {/* Top Navigation Bar */}
@@ -40,9 +52,38 @@ const MainLayout: React.FC = () => {
                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
               </svg>
             </button>
-            <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-semibold cursor-pointer hover:bg-green-600 transition-colors">
-              মি
-            </div>
+            {isAuthenticated && user ? (
+              <div className="relative group">
+                <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-semibold cursor-pointer hover:bg-green-600 transition-colors">
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                  ) : (
+                    getInitials(user.name)
+                  )}
+                </div>
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  <div className="p-2">
+                    <div className="px-3 py-2 text-sm text-gray-700 border-b border-gray-200">
+                      <div className="font-semibold">{user.name}</div>
+                      <div className="text-xs text-gray-500">{user.email}</div>
+                    </div>
+                    <a href="/settings" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      সেটিংস
+                    </a>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    >
+                      লগআউট
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <a href="/login" className="px-4 py-2 text-sm font-semibold text-green-600 hover:text-green-700">
+                লগইন
+              </a>
+            )}
           </div>
         </div>
       </header>

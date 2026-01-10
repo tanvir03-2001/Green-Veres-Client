@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-const SignupPage: React.FC = () => {
+const SignupPage: FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -9,6 +11,16 @@ const SignupPage: React.FC = () => {
     password: '',
     confirmPassword: '',
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { register, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -17,10 +29,36 @@ const SignupPage: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log('Signup:', formData);
+    setError('');
+
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('পাসওয়ার্ড মিলছে না');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await register({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+      });
+      navigate('/');
+    } catch (err: any) {
+      setError(err.message || 'রেজিস্ট্রেশন করতে সমস্যা হয়েছে');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -141,11 +179,17 @@ const SignupPage: React.FC = () => {
               </label>
             </div>
 
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
             <button
               type="submit"
-              className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm"
+              disabled={loading}
+              className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              একাউন্ট তৈরি করুন
+              {loading ? 'তৈরি হচ্ছে...' : 'একাউন্ট তৈরি করুন'}
             </button>
           </form>
 

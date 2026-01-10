@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 type Reel = {
   id: number;
@@ -54,7 +54,7 @@ const reels: Reel[] = [
   },
 ];
 
-const ReelsPage: React.FC = () => {
+const ReelsPage: FC = () => {
   return (
     <div className="min-h-full bg-gray-50">
       <div className="bg-white border-b border-gray-200">

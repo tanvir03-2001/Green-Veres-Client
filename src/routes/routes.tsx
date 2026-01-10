@@ -10,6 +10,7 @@ import LoginPage from "../pages/Login.tsx";
 import SignupPage from "../pages/Signup.tsx";
 import NotificationsPage from "../pages/Notifications.tsx";
 import SettingsPage from "../pages/Settings.tsx";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -26,11 +27,19 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Feed />,
+        element: (
+          <ProtectedRoute>
+            <Feed />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "reels",
-        element: <ReelsPage />,
+        element: (
+          <ProtectedRoute>
+            <ReelsPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "shop",
@@ -38,23 +47,43 @@ export const router = createBrowserRouter([
       },
       {
         path: "group",
-        element: <GroupPage />,
+        element: (
+          <ProtectedRoute>
+            <GroupPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "library",
-        element: <LibraryPage />,
+        element: (
+          <ProtectedRoute>
+            <LibraryPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "my-garden",
-        element: <MyGardenPage />,
+        element: (
+          <ProtectedRoute>
+            <MyGardenPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "notifications",
-        element: <NotificationsPage />,
+        element: (
+          <ProtectedRoute>
+            <NotificationsPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "settings",
-        element: <SettingsPage />,
+        element: (
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        ),
       }
     ],
   },
