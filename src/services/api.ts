@@ -1,16 +1,73 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// Get token from localStorage
-const getToken = (): string | null => {
-  return localStorage.getItem('token');
+// Get access token from localStorage
+const getAccessToken = (): string | null => {
+  return localStorage.getItem('accessToken');
 };
 
-// API request helper
+// Get refresh token from localStorage
+const getRefreshToken = (): string | null => {
+  return localStorage.getItem('refreshToken');
+};
+
+// Refresh access token
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
+const refreshAccessToken = async (): Promise<string | null> => {
+  if (isRefreshing && refreshPromise) {
+    return refreshPromise;
+  }
+
+  isRefreshing = true;
+  refreshPromise = (async () => {
+    try {
+      const refreshToken = getRefreshToken();
+      if (!refreshToken) {
+        return null;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/users/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success && data.data.accessToken) {
+        localStorage.setItem('accessToken', data.data.accessToken);
+        return data.data.accessToken;
+      }
+
+      // Refresh failed, clear tokens
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      return null;
+    } catch (error) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      return null;
+    } finally {
+      isRefreshing = false;
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+};
+
+// API request helper with auto token refresh
 const apiRequest = async (
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retryOn401 = true
 ): Promise<any> => {
-  const token = getToken();
+  let token = getAccessToken();
   
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -21,10 +78,29 @@ const apiRequest = async (
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  let response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
+
+  // If 401 and retry enabled, try to refresh token
+  if (response.status === 401 && retryOn401 && getRefreshToken()) {
+    const newToken = await refreshAccessToken();
+    
+    if (newToken) {
+      // Retry request with new token
+      headers['Authorization'] = `Bearer ${newToken}`;
+      response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
+      });
+    } else {
+      // Refresh failed, redirect to login
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
+  }
 
   const data = await response.json();
 
@@ -41,14 +117,27 @@ export const authAPI = {
     return apiRequest('/users/register', {
       method: 'POST',
       body: JSON.stringify(userData),
-    });
+    }, false); // Don't retry on 401 for auth endpoints
   },
 
   login: async (email: string, password: string) => {
     return apiRequest('/users/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
-    });
+    }, false); // Don't retry on 401 for auth endpoints
+  },
+
+  refreshToken: async (refreshToken: string) => {
+    return apiRequest('/users/refresh-token', {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    }, false); // Don't retry on 401 for refresh endpoint
+  },
+
+  logout: async () => {
+    return apiRequest('/users/logout', {
+      method: 'POST',
+    }, false); // Don't retry on 401 for logout
   },
 
   getProfile: async () => {
@@ -81,7 +170,7 @@ export const postsAPI = {
   },
 
   createPost: async (postData: { content: string; images?: string[]; videos?: string[]; category?: string; files?: File[] }) => {
-    const token = getToken();
+    const token = getAccessToken();
     const formData = new FormData();
     
     // Add text fields

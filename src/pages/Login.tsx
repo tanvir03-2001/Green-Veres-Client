@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { FC } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const LoginPage: FC = () => {
@@ -8,14 +8,34 @@ const LoginPage: FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPathRef = useRef<string>('/');
+
+  // Store redirect path when component mounts (before auth changes)
+  useEffect(() => {
+    redirectPathRef.current = (location.state as any)?.from?.pathname || '/';
+  }, []); // Only run once on mount
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
+    if (isAuthenticated && !authLoading) {
+      // Redirect to the page user was trying to access, or home
+      navigate(redirectPathRef.current, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
+
+  // Show loading if auth is still initializing - MUST be after all hooks
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"></div>
+          <div className="text-gray-600">লোড হচ্ছে...</div>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +44,8 @@ const LoginPage: FC = () => {
 
     try {
       await login(email, password);
-      navigate('/');
+      // Redirect will be handled by useEffect when isAuthenticated becomes true
+      // No need to navigate here as useEffect will handle it
     } catch (err: any) {
       setError(err.message || 'লগইন করতে সমস্যা হয়েছে');
     } finally {
