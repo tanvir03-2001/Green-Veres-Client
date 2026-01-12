@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import App from "../App";
 import Feed from "../components/Layout/Feed";
 import ShopPage from "../pages/Shop.tsx";
+import MyShopPage from "../pages/MyShop.tsx";
 import GroupPage from "../pages/Group.tsx";
 import LibraryPage from "../pages/Library.tsx";
 import MyGardenPage from "../pages/MyGarden.tsx";
@@ -44,6 +45,14 @@ export const router = createBrowserRouter([
       {
         path: "shop",
         element: <ShopPage />,
+      },
+      {
+        path: "my-shop",
+        element: (
+          <ProtectedRoute>
+            <MyShopPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "group",

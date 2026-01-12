@@ -293,14 +293,96 @@ export const postsAPI = {
 
 // Shop API
 export const shopAPI = {
-  getProducts: async () => {
-    return apiRequest('/shop', {
+  getProducts: async (params?: { category?: string; search?: string; sortBy?: string; order?: string; featured?: boolean }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.category) queryParams.append('category', params.category);
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
+    if (params?.order) queryParams.append('order', params.order);
+    if (params?.featured !== undefined) queryParams.append('featured', String(params.featured));
+    
+    const query = queryParams.toString();
+    return apiRequest(`/shop${query ? `?${query}` : ''}`, {
       method: 'GET',
     });
   },
 
   getProductById: async (id: string) => {
     return apiRequest(`/shop/${id}`, {
+      method: 'GET',
+    });
+  },
+
+  getCategories: async () => {
+    return apiRequest('/shop/categories', {
+      method: 'GET',
+    });
+  },
+
+  createProduct: async (productData: any) => {
+    return apiRequest('/shop', {
+      method: 'POST',
+      body: JSON.stringify(productData),
+    });
+  },
+
+  updateProduct: async (id: string, productData: any) => {
+    return apiRequest(`/shop/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(productData),
+    });
+  },
+
+  deleteProduct: async (id: string) => {
+    return apiRequest(`/shop/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// Seller API
+export const sellerAPI = {
+  createSeller: async (sellerData: { shopName: string; description: string; logo?: string; banner?: string; address?: string; phone?: string; email?: string }) => {
+    return apiRequest('/sellers', {
+      method: 'POST',
+      body: JSON.stringify(sellerData),
+    });
+  },
+
+  getMySeller: async () => {
+    return apiRequest('/sellers/my-shop', {
+      method: 'GET',
+    });
+  },
+
+  updateSeller: async (sellerData: any) => {
+    return apiRequest('/sellers', {
+      method: 'PUT',
+      body: JSON.stringify(sellerData),
+    });
+  },
+
+  deleteSeller: async () => {
+    return apiRequest('/sellers', {
+      method: 'DELETE',
+    });
+  },
+
+  getSellers: async (active?: boolean) => {
+    const query = active !== undefined ? `?active=${active}` : '';
+    return apiRequest(`/sellers${query}`, {
+      method: 'GET',
+    });
+  },
+
+  getSellerById: async (id: string) => {
+    return apiRequest(`/sellers/${id}`, {
+      method: 'GET',
+    });
+  },
+
+  getSellerProducts: async (id: string) => {
+    return apiRequest(`/sellers/${id}/products`, {
       method: 'GET',
     });
   },

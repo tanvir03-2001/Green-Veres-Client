@@ -51,6 +51,20 @@ const LeftSidebar: FC = () => {
           </NavLink>
 
           <NavLink
+            to="/my-shop"
+            className={({ isActive }: { isActive: boolean }) =>
+              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+          >
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5L9 4H4zm7 5a1 1 0 10-2 0v1H8a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V9z" clipRule="evenodd" />
+            </svg>
+            <span className="font-medium">My Shop</span>
+          </NavLink>
+
+          <NavLink
             to="/group"
             className={({ isActive }: { isActive: boolean }) =>
               `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
