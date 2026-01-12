@@ -184,7 +184,7 @@ export const postsAPI = {
     }
     
     // Use FormData for file uploads
-    const token = getAccessToken();
+    let token = getAccessToken();
     const formData = new FormData();
     
     // Add text fields
@@ -198,18 +198,59 @@ export const postsAPI = {
       formData.append('media', file);
     });
     
-    const headers: Record<string, string> = {};
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-    // Don't set Content-Type header - browser will set it with boundary for FormData
-    
-    try {
+    // Helper function to make the upload request
+    const makeUploadRequest = async (authToken: string | null) => {
+      const headers: Record<string, string> = {};
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+      }
+      // Don't set Content-Type header - browser will set it with boundary for FormData
+      
       const response = await fetch(`${API_BASE_URL}/posts`, {
         method: 'POST',
         headers,
         body: formData,
       });
+
+      return response;
+    };
+    
+    try {
+      let response = await makeUploadRequest(token);
+
+      // Handle 401 - try to refresh token and retry
+      if (response.status === 401 && getRefreshToken()) {
+        const newToken = await refreshAccessToken();
+        
+        if (newToken) {
+          // Retry request with new token
+          // Note: FormData cannot be reused, so we need to recreate it
+          const retryFormData = new FormData();
+          retryFormData.append('content', postData.content || '');
+          if (postData.category) {
+            retryFormData.append('category', postData.category);
+          }
+          postData.files.forEach(file => {
+            retryFormData.append('media', file);
+          });
+          
+          const retryHeaders: Record<string, string> = {
+            'Authorization': `Bearer ${newToken}`
+          };
+          
+          response = await fetch(`${API_BASE_URL}/posts`, {
+            method: 'POST',
+            headers: retryHeaders,
+            body: retryFormData,
+          });
+        } else {
+          // Refresh failed, redirect to login
+          if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
+          }
+          throw new Error('Authentication failed. Please login again.');
+        }
+      }
 
       // Parse response as text first to handle both JSON and non-JSON errors
       const text = await response.text();

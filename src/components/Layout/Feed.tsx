@@ -171,9 +171,12 @@ const Feed: FC = () => {
           isLiked: user ? post.likes.some((likeId: string) => likeId.toString() === user.id) : false,
         }));
         setPosts(postsWithLikes);
+      } else {
+        console.error('Failed to load posts:', response.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to load posts:', error);
+      // Don't show alert for load errors, just log them
     } finally {
       setLoading(false);
     }
@@ -240,7 +243,10 @@ const Feed: FC = () => {
   };
 
   const handleCreatePost = async () => {
-    if (!postContent.trim() && selectedFiles.length === 0) return;
+    if (!postContent.trim() && selectedFiles.length === 0) {
+      alert('Please add some content or select a file to post');
+      return;
+    }
 
     try {
       setCreatingPost(true);
@@ -255,10 +261,14 @@ const Feed: FC = () => {
         setPostCategory('All');
         setSelectedFiles([]);
         setFilePreviews([]);
-        loadPosts();
+        await loadPosts();
+      } else {
+        throw new Error(response.message || 'Failed to create post');
       }
     } catch (error: any) {
-      alert(error.message || 'Failed to create post');
+      console.error('Error creating post:', error);
+      const errorMessage = error.message || 'Failed to create post. Please try again.';
+      alert(errorMessage);
     } finally {
       setCreatingPost(false);
     }
