@@ -36,10 +36,10 @@ const Post: FC<PostProps> = ({ _id, author, createdAt, content, images, videos, 
     const postDate = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
     
-    if (diffInSeconds < 60) return 'এখনই';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} মিনিট আগে`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} ঘণ্টা আগে`;
-    return `${Math.floor(diffInSeconds / 86400)} দিন আগে`;
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    return `${Math.floor(diffInSeconds / 86400)} days ago`;
   };
 
   const getInitials = (name: string) => {
@@ -116,7 +116,7 @@ const Post: FC<PostProps> = ({ _id, author, createdAt, content, images, videos, 
             </svg>
             <span>{likes.length}</span>
           </div>
-          <span>{comments.length} মন্তব্য</span>
+          <span>{comments.length} comments</span>
         </div>
       </div>
 
@@ -129,13 +129,13 @@ const Post: FC<PostProps> = ({ _id, author, createdAt, content, images, videos, 
           <svg className="w-5 h-5" fill={isLiked ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
-          <span className="font-medium">লাইক</span>
+          <span className="font-medium">Like</span>
         </button>
         <button className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
-          <span className="font-medium">মন্তব্য</span>
+          <span className="font-medium">Comment</span>
         </button>
       </div>
     </div>
@@ -192,8 +192,8 @@ const Feed: FC = () => {
     const validFiles = files.filter(file => {
       const isValidType = file.type.startsWith('image/') || file.type.startsWith('video/');
       
-      if (!isValidType) {
-        invalidFiles.push(`${file.name}: শুধুমাত্র ছবি এবং ভিডিও আপলোড করা যাবে`);
+        if (!isValidType) {
+        invalidFiles.push(`${file.name}: Only images and videos can be uploaded`);
         return false;
       }
       
@@ -205,7 +205,7 @@ const Feed: FC = () => {
       if (!isValidSize) {
         const maxSizeMB = isImage ? 10 : 100;
         const fileSizeMB = formatFileSize(file.size);
-        invalidFiles.push(`${file.name}: ${isImage ? 'ছবি' : 'ভিডিও'} ${maxSizeMB}MB পর্যন্ত আপলোড করা যাবে (ফাইল সাইজ: ${fileSizeMB})`);
+        invalidFiles.push(`${file.name}: ${isImage ? 'Image' : 'Video'} can be uploaded up to ${maxSizeMB}MB (File size: ${fileSizeMB})`);
         return false;
       }
       
@@ -258,7 +258,7 @@ const Feed: FC = () => {
         loadPosts();
       }
     } catch (error: any) {
-      alert(error.message || 'পোস্ট তৈরি করতে সমস্যা হয়েছে');
+      alert(error.message || 'Failed to create post');
     } finally {
       setCreatingPost(false);
     }
@@ -281,9 +281,9 @@ const Feed: FC = () => {
     return (
       <div className="flex-1 h-full overflow-y-auto bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">লগইন করুন পোস্ট দেখতে</p>
+          <p className="text-gray-600 mb-4">Please login to view posts</p>
           <a href="/login" className="text-green-600 hover:text-green-700 font-semibold">
-            লগইন করুন
+            Login
           </a>
         </div>
       </div>
@@ -307,7 +307,7 @@ const Feed: FC = () => {
               <textarea
                 value={postContent}
                 onChange={(e) => setPostContent(e.target.value)}
-                placeholder="আপনার মনে কি চলছে?"
+                placeholder="What's on your mind?"
                 className="w-full bg-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900 placeholder-gray-500 resize-none"
                 rows={3}
               />
@@ -356,9 +356,9 @@ const Feed: FC = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <span className="text-sm">ছবি/ভিডিও</span>
+                        <span className="text-sm">Photo/Video</span>
                       </div>
-                      <span className="text-xs text-gray-400 mt-0.5">ছবি: ১০MB, ভিডিও: ১০০MB</span>
+                      <span className="text-xs text-gray-400 mt-0.5">Image: 10MB, Video: 100MB</span>
                     </div>
                   </label>
                   <select
@@ -379,7 +379,7 @@ const Feed: FC = () => {
                   disabled={(!postContent.trim() && selectedFiles.length === 0) || creatingPost}
                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {creatingPost ? 'পোস্ট হচ্ছে...' : 'পোস্ট করুন'}
+                  {creatingPost ? 'Posting...' : 'Post'}
                 </button>
               </div>
             </div>
@@ -405,9 +405,9 @@ const Feed: FC = () => {
 
         {/* Posts */}
         {loading ? (
-          <div className="text-center py-8 text-gray-500">লোড হচ্ছে...</div>
+          <div className="text-center py-8 text-gray-500">Loading...</div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">কোন পোস্ট নেই</div>
+          <div className="text-center py-8 text-gray-500">No posts yet</div>
         ) : (
           posts.map((post) => (
             <Post key={post._id} {...post} onLike={handleLike} />

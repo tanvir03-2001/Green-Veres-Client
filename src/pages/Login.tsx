@@ -31,7 +31,7 @@ const LoginPage: FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"></div>
-          <div className="text-gray-600">লোড হচ্ছে...</div>
+          <div className="text-gray-600">Loading...</div>
         </div>
       </div>
     );
@@ -47,7 +47,7 @@ const LoginPage: FC = () => {
       // Redirect will be handled by useEffect when isAuthenticated becomes true
       // No need to navigate here as useEffect will handle it
     } catch (err: any) {
-      setError(err.message || 'লগইন করতে সমস্যা হয়েছে');
+      setError(err.message || 'Failed to login');
     } finally {
       setLoading(false);
     }
@@ -64,8 +64,8 @@ const LoginPage: FC = () => {
             </svg>
             <h1 className="text-3xl font-bold text-green-600">GreenVerse</h1>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">লগইন করুন</h2>
-          <p className="text-sm text-gray-600">আপনার একাউন্টে প্রবেশ করুন</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Login</h2>
+          <p className="text-sm text-gray-600">Sign in to your account</p>
         </div>
 
         {/* Login Form */}
@@ -73,7 +73,7 @@ const LoginPage: FC = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                ইমেইল বা ফোন নম্বর
+                Email or Phone Number
               </label>
               <input
                 type="text"
@@ -88,7 +88,7 @@ const LoginPage: FC = () => {
 
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                পাসওয়ার্ড
+                Password
               </label>
               <input
                 type="password"
@@ -104,10 +104,10 @@ const LoginPage: FC = () => {
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-green-600" />
-                <span className="text-gray-600">আমাকে মনে রাখুন</span>
+                <span className="text-gray-600">Remember me</span>
               </label>
               <a href="#" className="text-green-600 hover:text-green-700 font-semibold">
-                পাসওয়ার্ড ভুলে গেছেন?
+                Forgot password?
               </a>
             </div>
 
@@ -121,15 +121,15 @@ const LoginPage: FC = () => {
               disabled={loading}
               className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'লগইন হচ্ছে...' : 'লগইন করুন'}
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-center text-sm text-gray-600">
-              একাউন্ট নেই?{' '}
+              Don't have an account?{' '}
               <Link to="/signup" className="text-green-600 hover:text-green-700 font-semibold">
-                সাইন আপ করুন
+                Sign up
               </Link>
             </p>
           </div>
@@ -142,7 +142,7 @@ const LoginPage: FC = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-gradient-to-br from-green-50 to-emerald-100 text-gray-500">অথবা</span>
+              <span className="px-4 bg-gradient-to-br from-green-50 to-emerald-100 text-gray-500">Or</span>
             </div>
           </div>
 

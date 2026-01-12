@@ -14,7 +14,7 @@ type Notification = {
 const NotificationsPage: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedType, setSelectedType] = useState<string>('সব');
+  const [selectedType, setSelectedType] = useState<string>('All');
 
   useEffect(() => {
     loadNotifications();
@@ -57,20 +57,20 @@ const NotificationsPage: FC = () => {
     const notifDate = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - notifDate.getTime()) / 1000);
     
-    if (diffInSeconds < 60) return 'এখনই';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} মিনিট আগে`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} ঘণ্টা আগে`;
-    return `${Math.floor(diffInSeconds / 86400)} দিন আগে`;
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    return `${Math.floor(diffInSeconds / 86400)} days ago`;
   };
 
-  const filteredNotifications = selectedType === 'সব' 
+  const filteredNotifications = selectedType === 'All' 
     ? notifications 
     : notifications.filter(n => {
         const typeMap: Record<string, string> = {
-          'কমেন্ট': 'comment',
-          'রিয়্যাকশন': 'like',
-          'ফলো': 'follow',
-          'সিস্টেম': 'system',
+          'Comment': 'comment',
+          'Reaction': 'like',
+          'Follow': 'follow',
+          'System': 'system',
         };
         return n.type === typeMap[selectedType];
       });
@@ -78,10 +78,10 @@ const NotificationsPage: FC = () => {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const typeLabel: Record<Notification['type'], string> = {
-    like: "রিয়্যাকশন",
-    comment: "কমেন্ট",
-    follow: "ফলো",
-    system: "সিস্টেম",
+    like: "Reaction",
+    comment: "Comment",
+    follow: "Follow",
+    system: "System",
   };
 
   return (
@@ -90,21 +90,21 @@ const NotificationsPage: FC = () => {
         <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-2">
             <p className="text-xs font-semibold text-green-600 uppercase tracking-wide">Notifications</p>
-            <h1 className="text-2xl font-bold text-gray-900">বিজ্ঞপ্তি কেন্দ্র</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Notification Center</h1>
             <p className="text-sm text-gray-600">
-              আপনার পোস্ট, গ্রুপ আর বাগান সম্পর্কিত সব আপডেট এক জায়গায়।
+              All updates about your posts, groups, and garden in one place.
             </p>
           </div>
           <div className="flex items-center gap-3 text-xs text-gray-600">
             <div className="bg-green-50 px-4 py-3 rounded-lg text-center">
-              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">অপঠিত</p>
+              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">Unread</p>
               <p className="text-lg font-bold text-green-800">{unreadCount}</p>
             </div>
             <button 
               onClick={handleMarkAllAsRead}
               className="px-4 py-2 text-xs font-semibold rounded-full bg-green-600 text-white hover:bg-green-700"
             >
-              সব মার্ক করুন পড়া হয়েছে
+              Mark All as Read
             </button>
           </div>
         </div>
@@ -112,7 +112,7 @@ const NotificationsPage: FC = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
         <div className="flex flex-wrap items-center gap-2">
-          {["সব", "কমেন্ট", "রিয়্যাকশন", "ফলো", "সিস্টেম"].map((chip) => (
+          {["All", "Comment", "Reaction", "Follow", "System"].map((chip) => (
             <button
               key={chip}
               onClick={() => setSelectedType(chip)}
@@ -128,7 +128,7 @@ const NotificationsPage: FC = () => {
         </div>
 
         {loading ? (
-          <div className="text-center py-8 text-gray-500">লোড হচ্ছে...</div>
+          <div className="text-center py-8 text-gray-500">Loading...</div>
         ) : (
           <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100 shadow-sm">
             {filteredNotifications.length > 0 ? (
@@ -181,7 +181,7 @@ const NotificationsPage: FC = () => {
               ))
             ) : (
               <div className="px-4 py-8 text-center text-gray-500">
-                কোন বিজ্ঞপ্তি নেই
+                No notifications
               </div>
             )}
           </div>

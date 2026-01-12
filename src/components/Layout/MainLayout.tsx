@@ -35,7 +35,7 @@ const MainLayout: FC = () => {
               </svg>
               <input
                 type="text"
-                placeholder="GreenVerse এ খুঁজুন"
+                placeholder="Search GreenVerse"
                 className="bg-transparent flex-1 focus:outline-none text-sm text-gray-900 placeholder-gray-500"
               />
             </div>
@@ -68,20 +68,20 @@ const MainLayout: FC = () => {
                       <div className="text-xs text-gray-500">{user.email}</div>
                     </div>
                     <a href="/settings" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      সেটিংস
+                      Settings
                     </a>
                     <button
                       onClick={handleLogout}
                       className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
                     >
-                      লগআউট
+                      Logout
                     </button>
                   </div>
                 </div>
               </div>
             ) : (
               <a href="/login" className="px-4 py-2 text-sm font-semibold text-green-600 hover:text-green-700">
-                লগইন
+                Login
               </a>
             )}
           </div>

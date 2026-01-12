@@ -36,49 +36,18 @@ const LibraryPage: FC = () => {
     }
   };
 
-  const staticResources: Resource[] = [
-  {
-    title: "শুরুর জন্য ইনডোর গার্ডেনিং গাইড",
-    type: "guide",
-    duration: "১৫ মিনিট রিড",
-    level: "beginner",
-    badge: "নতুন",
-    description: "ছোট ঘরেও কীভাবে আলো, পানি আর মাটি ম্যানেজ করে সুন্দর ইনডোর গার্ডেন বানাবেন – ধাপে ধাপে গাইড।",
-  },
-  {
-    title: "সবজি গাছের জন্য জৈব সারের রেসিপি",
-    type: "article",
-    duration: "১০ মিনিট রিড",
-    level: "intermediate",
-    description: "বাড়ির ফেলে দেওয়া জিনিস দিয়ে কিভাবে কম খরচে কার্যকরী জৈব সার তৈরি করবেন।",
-  },
-  {
-    title: "ভিডিও: ৩০ মিনিটে টেরেস গার্ডেন প্ল্যান",
-    type: "video",
-    duration: "৩০ মিনিট ভিডিও",
-    level: "beginner",
-    badge: "ভিডিও",
-    description: "ছাদে গার্ডেন করার আগে কোন কোন জিনিস প্ল্যান করতে হবে – একটি পূর্ণাঙ্গ ভিডিও ওভারভিউ।",
-  },
-  {
-    title: "মাটি, পিএইচ আর ড্রেনেজ – ডিপ ডাইভ",
-    type: "article",
-    duration: "২০ মিনিট রিড",
-    level: "advanced",
-    description: "মাটির গঠন, পিএইচ ব্যালেন্স আর ড্রেনেজ কেন গাছের জন্য এত গুরুত্বপূর্ণ – সায়েন্স সহ ব্যাখ্যা।",
-  },
-];
+  const staticResources: Resource[] = [];
 
 const levelLabel: Record<Resource['level'], string> = {
-  beginner: "শুরুর স্তর",
-  intermediate: "মাঝারি স্তর",
-  advanced: "অ্যাডভান্সড",
+  beginner: "Beginner",
+  intermediate: "Intermediate",
+  advanced: "Advanced",
 };
 
 const typeLabel: Record<Resource['type'], string> = {
-  article: "আর্টিকেল",
-  guide: "গাইড",
-  video: "ভিডিও",
+  article: "Article",
+  guide: "Guide",
+  video: "Video",
 };
 
   return (
@@ -87,19 +56,19 @@ const typeLabel: Record<Resource['type'], string> = {
         <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-2">
             <p className="text-xs font-semibold text-green-600 uppercase tracking-wide">GreenVerse Library</p>
-            <h1 className="text-2xl font-bold text-gray-900">গাছের জ্ঞানের সবকিছু এক লাইব্রেরিতে</h1>
+            <h1 className="text-2xl font-bold text-gray-900">All gardening knowledge in one library</h1>
             <p className="text-sm text-gray-600">
-              আর্টিকেল, গাইড আর ভিডিও – বেসিক থেকে অ্যাডভান্সড পর্যন্ত বাগান শেখার রিসোর্স।
+              Articles, guides, and videos – resources to learn gardening from basic to advanced levels.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3 text-center text-xs text-gray-600">
             <div className="bg-green-50 px-4 py-3 rounded-lg">
-              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">মোট রিসোর্স</p>
-              <p className="text-lg font-bold text-green-800">৪০+</p>
+              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">Total Resources</p>
+              <p className="text-lg font-bold text-green-800">{resources.length}+</p>
             </div>
             <div className="bg-green-50 px-4 py-3 rounded-lg">
-              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">বাংলা কনটেন্ট</p>
-              <p className="text-lg font-bold text-green-800">৯০%</p>
+              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">English Content</p>
+              <p className="text-lg font-bold text-green-800">100%</p>
             </div>
           </div>
         </div>
@@ -107,7 +76,7 @@ const typeLabel: Record<Resource['type'], string> = {
 
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
         <div className="flex flex-wrap items-center gap-2">
-          {["সব", "গাইড", "আর্টিকেল", "ভিডিও", "শুরুর স্তর"].map((chip, idx) => (
+          {["All", "Guides", "Articles", "Videos", "Beginner"].map((chip, idx) => (
             <button
               key={chip}
               className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
@@ -122,7 +91,7 @@ const typeLabel: Record<Resource['type'], string> = {
         </div>
 
         {loading ? (
-          <div className="text-center py-8 text-gray-500">লোড হচ্ছে...</div>
+          <div className="text-center py-8 text-gray-500">Loading...</div>
         ) : (
           <div className="grid gap-4 lg:grid-cols-2">
             {(resources.length > 0 ? resources : staticResources).map((item) => (
@@ -152,10 +121,10 @@ const typeLabel: Record<Resource['type'], string> = {
                     rel="noopener noreferrer"
                     className="text-sm font-semibold text-green-700 hover:text-green-800"
                   >
-                    এখনই পড়ুন
+                    Read Now
                   </a>
                   <button className="px-3 py-1.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
-                    পরে রাখুন
+                    Save for Later
                   </button>
                 </div>
               </div>
@@ -165,14 +134,14 @@ const typeLabel: Record<Resource['type'], string> = {
 
         <div className="bg-green-50 border border-green-100 rounded-2xl p-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">শিখুন, লিখুন, শেয়ার করুন</p>
-            <h2 className="text-xl font-bold text-gray-900">আপনার নিজস্ব গাইড বা আর্টিকেল যোগ করুন</h2>
+            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">Learn, Write, Share</p>
+            <h2 className="text-xl font-bold text-gray-900">Add your own guide or article</h2>
             <p className="text-sm text-gray-600">
-              গাছ নিয়ে আপনার অভিজ্ঞতা, এক্সপেরিমেন্ট বা টিপস – সবকিছু ডকুমেন্ট করে লাইব্রেরিতে যুক্ত করুন, অন্যরাও শিখুক।
+              Document your experiences, experiments, or tips about plants and add them to the library so others can learn too.
             </p>
           </div>
           <button className="px-5 py-2.5 text-sm font-semibold rounded-full bg-green-700 text-white hover:bg-green-800 transition-colors">
-            নতুন রিসোর্স সাবমিট করুন
+            Submit New Resource
           </button>
         </div>
       </div>

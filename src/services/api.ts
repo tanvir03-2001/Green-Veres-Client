@@ -170,22 +170,6 @@ export const postsAPI = {
   },
 
   createPost: async (postData: { content: string; images?: string[]; videos?: string[]; category?: string; files?: File[] }) => {
-    const token = getAccessToken();
-    const formData = new FormData();
-    
-    // Add text fields
-    formData.append('content', postData.content);
-    if (postData.category) {
-      formData.append('category', postData.category);
-    }
-    
-    // Add files if present
-    if (postData.files && postData.files.length > 0) {
-      postData.files.forEach(file => {
-        formData.append('media', file);
-      });
-    }
-    
     // If no files, use JSON (backward compatibility)
     if (!postData.files || postData.files.length === 0) {
       return apiRequest('/posts', {
@@ -200,25 +184,56 @@ export const postsAPI = {
     }
     
     // Use FormData for file uploads
+    const token = getAccessToken();
+    const formData = new FormData();
+    
+    // Add text fields
+    formData.append('content', postData.content || '');
+    if (postData.category) {
+      formData.append('category', postData.category);
+    }
+    
+    // Add files
+    postData.files.forEach(file => {
+      formData.append('media', file);
+    });
+    
     const headers: Record<string, string> = {};
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     // Don't set Content-Type header - browser will set it with boundary for FormData
     
-    const response = await fetch(`${API_BASE_URL}/posts`, {
-      method: 'POST',
-      headers,
-      body: formData,
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/posts`, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
 
-    const data = await response.json();
+      // Parse response as text first to handle both JSON and non-JSON errors
+      const text = await response.text();
+      let data;
+      
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseError) {
+        // If response is not JSON, create error object
+        throw new Error(text || 'Server returned invalid response');
+      }
 
-    if (!response.ok) {
-      throw new Error(data.message || 'API request failed');
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'API request failed');
+      }
+
+      return data;
+    } catch (error) {
+      // Re-throw if it's already an Error, otherwise wrap it
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Network error or server unavailable');
     }
-
-    return data;
   },
 
   likePost: async (id: string) => {

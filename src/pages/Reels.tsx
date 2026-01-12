@@ -11,48 +11,7 @@ type Reel = {
   duration: string;
 };
 
-const reels: Reel[] = [
-  {
-    id: 1,
-    author: "রহিম উদ্দিন",
-    authorAvatar: "র",
-    title: "৩০ সেকেন্ডে কিচেন গার্ডেন সেটআপ",
-    views: "১২.৫কে",
-    likes: "১.২কে",
-    thumbnail: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=800&q=80",
-    duration: "০:৩০",
-  },
-  {
-    id: 2,
-    author: "ফাতেমা খাতুন",
-    authorAvatar: "ফ",
-    title: "টমেটো গাছের যত্ন - প্রো টিপস",
-    views: "৮.৯কে",
-    likes: "৯৫০",
-    thumbnail: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
-    duration: "০:৪৫",
-  },
-  {
-    id: 3,
-    author: "আনিসুর রহমান",
-    authorAvatar: "আ",
-    title: "ব্যালকনি গার্ডেন ট্রান্সফরমেশন",
-    views: "১৫.৩কে",
-    likes: "২.১কে",
-    thumbnail: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80",
-    duration: "১:১৫",
-  },
-  {
-    id: 4,
-    author: "নাজমা বেগম",
-    authorAvatar: "ন",
-    title: "জৈব সার তৈরি করার সহজ উপায়",
-    views: "৬.৭কে",
-    likes: "৭৮০",
-    thumbnail: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=800&q=80",
-    duration: "০:৫০",
-  },
-];
+const reels: Reel[] = [];
 
 const ReelsPage: FC = () => {
   return (
@@ -61,23 +20,23 @@ const ReelsPage: FC = () => {
         <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-2">
             <p className="text-xs font-semibold text-green-600 uppercase tracking-wide">GreenVerse Reels</p>
-            <h1 className="text-2xl font-bold text-gray-900">শর্ট ভিডিও - বাগান শেখার নতুন উপায়</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Short Videos - A New Way to Learn Gardening</h1>
             <p className="text-sm text-gray-600">
-              কুইক টিপস, টিউটোরিয়াল আর ইনস্পিরেশন – সবকিছু ছোট ছোট ভিডিওতে।
+              Quick tips, tutorials, and inspiration – everything in short videos.
             </p>
           </div>
           <div className="grid grid-cols-3 gap-3 text-center text-xs text-gray-600">
             <div className="bg-green-50 px-4 py-3 rounded-lg">
-              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">মোট রিল</p>
-              <p className="text-lg font-bold text-green-800">২৫০+</p>
+              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">Total Reels</p>
+              <p className="text-lg font-bold text-green-800">{reels.length}+</p>
             </div>
             <div className="bg-green-50 px-4 py-3 rounded-lg">
-              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">দৈনিক ভিউ</p>
-              <p className="text-lg font-bold text-green-800">৫০কে+</p>
+              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">Daily Views</p>
+              <p className="text-lg font-bold text-green-800">50K+</p>
             </div>
             <div className="bg-green-50 px-4 py-3 rounded-lg">
-              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">ক্রিয়েটর</p>
-              <p className="text-lg font-bold text-green-800">৪০+</p>
+              <p className="text-[11px] uppercase tracking-wide text-green-700 font-semibold">Creators</p>
+              <p className="text-lg font-bold text-green-800">40+</p>
             </div>
           </div>
         </div>
@@ -85,7 +44,7 @@ const ReelsPage: FC = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
         <div className="flex flex-wrap items-center gap-2">
-          {["সব", "টিউটোরিয়াল", "টিপস", "ট্রান্সফরমেশন", "নতুন"].map((chip, idx) => (
+          {["All", "Tutorials", "Tips", "Transformation", "New"].map((chip, idx) => (
             <button
               key={chip}
               className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
@@ -126,7 +85,7 @@ const ReelsPage: FC = () => {
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-gray-900">{reel.author}</p>
-                      <p className="text-[11px] text-gray-500">{reel.views} ভিউ</p>
+                      <p className="text-[11px] text-gray-500">{reel.views} views</p>
                     </div>
                   </div>
                 </div>
@@ -141,7 +100,7 @@ const ReelsPage: FC = () => {
                     </span>
                   </div>
                   <button className="px-3 py-1.5 text-xs font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors">
-                    দেখুন
+                    Watch
                   </button>
                 </div>
               </div>
@@ -151,14 +110,14 @@ const ReelsPage: FC = () => {
 
         <div className="bg-green-50 border border-green-100 rounded-2xl p-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">আপনার রিল শেয়ার করুন</p>
-            <h2 className="text-xl font-bold text-gray-900">নিজের বাগানের ভিডিও আপলোড করুন</h2>
+            <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">Share Your Reel</p>
+            <h2 className="text-xl font-bold text-gray-900">Upload your garden video</h2>
             <p className="text-sm text-gray-600">
-              আপনার গার্ডেনিং টিপস, ট্রান্সফরমেশন বা যেকোনো ইনস্পিরেশন – সবকিছু শেয়ার করুন কমিউনিটির সাথে।
+              Share your gardening tips, transformations, or any inspiration – share everything with the community.
             </p>
           </div>
           <button className="px-5 py-2.5 text-sm font-semibold rounded-full bg-green-700 text-white hover:bg-green-800 transition-colors">
-            নতুন রিল তৈরি করুন
+            Create New Reel
           </button>
         </div>
       </div>

@@ -27,9 +27,9 @@ const SettingsPage: FC = () => {
     try {
       setSaving(true);
       await updateUser(formData);
-      alert('প্রোফাইল আপডেট হয়েছে');
+      alert('Profile updated successfully');
     } catch (error: any) {
-      alert(error.message || 'আপডেট করতে সমস্যা হয়েছে');
+      alert(error.message || 'Failed to update');
     } finally {
       setSaving(false);
     }
@@ -38,9 +38,9 @@ const SettingsPage: FC = () => {
     <div className="min-h-full bg-gray-50">
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-gray-900">সেটিংস</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
           <p className="text-sm text-gray-600 mt-1">
-            আপনার একাউন্ট, নোটিফিকেশন আর ভাষা সংক্রান্ত সেটিংস এখানে ম্যানেজ করতে পারবেন।
+            Manage your account, notifications, and language settings here.
           </p>
         </div>
       </div>
@@ -50,20 +50,20 @@ const SettingsPage: FC = () => {
         <section className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">একাউন্ট সেটিংস</h2>
-              <p className="text-xs text-gray-500">নাম, প্রোফাইল আর ইমেইল আপডেট করুন।</p>
+              <h2 className="text-sm font-semibold text-gray-900">Account Settings</h2>
+              <p className="text-xs text-gray-500">Update your name, profile, and email.</p>
             </div>
             <button 
               onClick={handleSaveProfile}
               disabled={saving}
               className="px-3 py-1.5 text-xs font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
             >
-              {saving ? 'সেভ হচ্ছে...' : 'সেভ করুন'}
+              {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
           <div className="space-y-3">
             <div>
-              <label className="text-xs text-gray-500 block mb-1">নাম</label>
+              <label className="text-xs text-gray-500 block mb-1">Name</label>
               <input
                 type="text"
                 value={formData.name}
@@ -72,7 +72,7 @@ const SettingsPage: FC = () => {
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 block mb-1">বায়ো</label>
+              <label className="text-xs text-gray-500 block mb-1">Bio</label>
               <textarea
                 value={formData.bio}
                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
@@ -81,7 +81,7 @@ const SettingsPage: FC = () => {
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 block mb-1">লোকেশন</label>
+              <label className="text-xs text-gray-500 block mb-1">Location</label>
               <input
                 type="text"
                 value={formData.location}
@@ -91,11 +91,11 @@ const SettingsPage: FC = () => {
             </div>
             <div className="grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
               <div>
-                <p className="text-xs text-gray-500">ইমেইল</p>
+                <p className="text-xs text-gray-500">Email</p>
                 <p className="font-medium">{user?.email || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">ফোন</p>
+                <p className="text-xs text-gray-500">Phone</p>
                 <p className="font-medium">{user?.phone || 'N/A'}</p>
               </div>
             </div>
@@ -106,30 +106,30 @@ const SettingsPage: FC = () => {
         <section className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">নোটিফিকেশন</h2>
-              <p className="text-xs text-gray-500">কোন ধরনের নোটিফিকেশন আপনি পেতে চান ঠিক করুন।</p>
+              <h2 className="text-sm font-semibold text-gray-900">Notifications</h2>
+              <p className="text-xs text-gray-500">Choose what types of notifications you want to receive.</p>
             </div>
           </div>
           <div className="space-y-3 text-sm text-gray-700">
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" defaultChecked className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600" />
               <div>
-                <p className="font-medium">পোস্ট, কমেন্ট এবং রিয়্যাকশন</p>
-                <p className="text-xs text-gray-500">আপনার কনটেন্টে নতুন এক্টিভিটি হলে জানান।</p>
+                <p className="font-medium">Posts, Comments, and Reactions</p>
+                <p className="text-xs text-gray-500">Notify me when there's new activity on my content.</p>
               </div>
             </label>
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" defaultChecked className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600" />
               <div>
-                <p className="font-medium">গ্রুপ আপডেট</p>
-                <p className="text-xs text-gray-500">আপনি যে গ্রুপগুলোতে আছেন সেগুলোর গুরুত্বপূর্ণ আপডেট।</p>
+                <p className="font-medium">Group Updates</p>
+                <p className="text-xs text-gray-500">Important updates from groups you're in.</p>
               </div>
             </label>
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600" />
               <div>
-                <p className="font-medium">প্রমোশনাল নোটিফিকেশন</p>
-                <p className="text-xs text-gray-500">অফার, নতুন ফিচার আর সাজেশন।</p>
+                <p className="font-medium">Promotional Notifications</p>
+                <p className="text-xs text-gray-500">Offers, new features, and suggestions.</p>
               </div>
             </label>
           </div>
@@ -139,16 +139,16 @@ const SettingsPage: FC = () => {
         <section className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">ভাষা</h2>
-              <p className="text-xs text-gray-500">GreenVerse কোন ভাষায় ব্যবহার করতে চান সেট করুন।</p>
+              <h2 className="text-sm font-semibold text-gray-900">Language</h2>
+              <p className="text-xs text-gray-500">Choose the language you want to use GreenVerse in.</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-2 text-sm">
             <button className="px-4 py-2 rounded-full bg-green-600 text-white font-semibold text-xs">
-              বাংলা (ডিফল্ট)
+              English (Default)
             </button>
             <button className="px-4 py-2 rounded-full bg-white border border-gray-200 text-gray-700 text-xs hover:border-green-200 hover:text-green-700">
-              English
+              বাংলা
             </button>
           </div>
         </section>

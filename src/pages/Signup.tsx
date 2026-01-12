@@ -35,12 +35,12 @@ const SignupPage: FC = () => {
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      setError('পাসওয়ার্ড মিলছে না');
+      setError('Passwords do not match');
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে');
+      setError('Password must be at least 6 characters');
       return;
     }
 
@@ -55,7 +55,7 @@ const SignupPage: FC = () => {
       });
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'রেজিস্ট্রেশন করতে সমস্যা হয়েছে');
+      setError(err.message || 'Failed to register');
     } finally {
       setLoading(false);
     }
@@ -72,8 +72,8 @@ const SignupPage: FC = () => {
             </svg>
             <h1 className="text-3xl font-bold text-green-600">GreenVerse</h1>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">নতুন একাউন্ট তৈরি করুন</h2>
-          <p className="text-sm text-gray-600">GreenVerse কমিউনিটিতে যোগ দিন</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Create New Account</h2>
+          <p className="text-sm text-gray-600">Join the GreenVerse community</p>
         </div>
 
         {/* Signup Form */}
@@ -81,7 +81,7 @@ const SignupPage: FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                পুরো নাম
+                Full Name
               </label>
               <input
                 type="text"
@@ -90,14 +90,14 @@ const SignupPage: FC = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
-                placeholder="আপনার নাম"
+                placeholder="Your name"
                 required
               />
             </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                ইমেইল
+                Email
               </label>
               <input
                 type="email"
@@ -113,7 +113,7 @@ const SignupPage: FC = () => {
 
             <div>
               <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                ফোন নম্বর
+                Phone Number
               </label>
               <input
                 type="tel"
@@ -122,14 +122,14 @@ const SignupPage: FC = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
-                placeholder="০১XXXXXXXXX"
+                placeholder="+1XXXXXXXXXX"
                 required
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                পাসওয়ার্ড
+                Password
               </label>
               <input
                 type="password"
@@ -145,7 +145,7 @@ const SignupPage: FC = () => {
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
-                পাসওয়ার্ড নিশ্চিত করুন
+                Confirm Password
               </label>
               <input
                 type="password"
@@ -167,15 +167,14 @@ const SignupPage: FC = () => {
                 required
               />
               <label htmlFor="terms" className="text-xs text-gray-600">
-                আমি{' '}
+                I have read and agree to the{' '}
                 <a href="#" className="text-green-600 hover:text-green-700 font-semibold">
                   Terms of Service
                 </a>{' '}
-                এবং{' '}
+                and{' '}
                 <a href="#" className="text-green-600 hover:text-green-700 font-semibold">
                   Privacy Policy
-                </a>{' '}
-                পড়েছি এবং সম্মত
+                </a>
               </label>
             </div>
 
@@ -189,15 +188,15 @@ const SignupPage: FC = () => {
               disabled={loading}
               className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'তৈরি হচ্ছে...' : 'একাউন্ট তৈরি করুন'}
+              {loading ? 'Creating...' : 'Create Account'}
             </button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-center text-sm text-gray-600">
-              ইতিমধ্যে একাউন্ট আছে?{' '}
+              Already have an account?{' '}
               <Link to="/login" className="text-green-600 hover:text-green-700 font-semibold">
-                লগইন করুন
+                Login
               </Link>
             </p>
           </div>
@@ -210,7 +209,7 @@ const SignupPage: FC = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-gradient-to-br from-green-50 to-emerald-100 text-gray-500">অথবা</span>
+              <span className="px-4 bg-gradient-to-br from-green-50 to-emerald-100 text-gray-500">Or</span>
             </div>
           </div>
 
