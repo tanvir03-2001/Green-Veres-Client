@@ -376,4 +376,147 @@ export const notificationsAPI = {
   },
 };
 
+// Reels API
+export const reelsAPI = {
+  getReels: async (category?: string) => {
+    const query = category && category !== 'All' ? `?category=${category}` : '';
+    return apiRequest(`/reels${query}`, {
+      method: 'GET',
+    });
+  },
+
+  getReelById: async (id: string) => {
+    return apiRequest(`/reels/${id}`, {
+      method: 'GET',
+    });
+  },
+
+  createReel: async (reelData: { title: string; description?: string; category?: string; videoUrl?: string; files?: File[] }) => {
+    // If no files, use JSON (backward compatibility)
+    if (!reelData.files || reelData.files.length === 0) {
+      return apiRequest('/reels', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: reelData.title,
+          description: reelData.description,
+          videoUrl: reelData.videoUrl,
+          category: reelData.category,
+        }),
+      });
+    }
+    
+    // Use FormData for file uploads
+    let token = getAccessToken();
+    const formData = new FormData();
+    
+    // Add text fields
+    formData.append('title', reelData.title);
+    if (reelData.description) {
+      formData.append('description', reelData.description);
+    }
+    if (reelData.category) {
+      formData.append('category', reelData.category);
+    }
+    
+    // Add files
+    reelData.files.forEach(file => {
+      formData.append('media', file);
+    });
+    
+    // Helper function to make the upload request
+    const makeUploadRequest = async (authToken: string | null) => {
+      const headers: Record<string, string> = {};
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+      }
+      // Don't set Content-Type header - browser will set it with boundary for FormData
+      
+      const response = await fetch(`${API_BASE_URL}/reels`, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      return response;
+    };
+    
+    try {
+      let response = await makeUploadRequest(token);
+
+      // Handle 401 - try to refresh token and retry
+      if (response.status === 401 && getRefreshToken()) {
+        const newToken = await refreshAccessToken();
+        
+        if (newToken) {
+          // Retry request with new token
+          // Note: FormData cannot be reused, so we need to recreate it
+          const retryFormData = new FormData();
+          retryFormData.append('title', reelData.title);
+          if (reelData.description) {
+            retryFormData.append('description', reelData.description);
+          }
+          if (reelData.category) {
+            retryFormData.append('category', reelData.category);
+          }
+          reelData.files.forEach(file => {
+            retryFormData.append('media', file);
+          });
+          
+          const retryHeaders: Record<string, string> = {
+            'Authorization': `Bearer ${newToken}`
+          };
+          
+          response = await fetch(`${API_BASE_URL}/reels`, {
+            method: 'POST',
+            headers: retryHeaders,
+            body: retryFormData,
+          });
+        } else {
+          // Refresh failed, redirect to login
+          if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
+          }
+          throw new Error('Authentication failed. Please login again.');
+        }
+      }
+
+      // Parse response as text first to handle both JSON and non-JSON errors
+      const text = await response.text();
+      let data;
+      
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseError) {
+        // If response is not JSON, create error object
+        throw new Error(text || 'Server returned invalid response');
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'API request failed');
+      }
+
+      return data;
+    } catch (error) {
+      // Re-throw if it's already an Error, otherwise wrap it
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Network error or server unavailable');
+    }
+  },
+
+  likeReel: async (id: string) => {
+    return apiRequest(`/reels/${id}/like`, {
+      method: 'POST',
+    });
+  },
+
+  commentReel: async (id: string, text: string) => {
+    return apiRequest(`/reels/${id}/comment`, {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+  },
+};
+
 export default apiRequest;
