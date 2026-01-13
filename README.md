@@ -21,7 +21,7 @@ GreenVerse একটি সম্পূর্ণ বাংলা ভাষায
 - তাদের বাগানের ছবি এবং আপডেট শেয়ার করতে পারে
 - গার্ডেনিং টিপস এবং টিউটোরিয়াল দেখতে পারে
 - প্ল্যান্ট, টুলস এবং সরঞ্জাম কিনতে পারে
-- গ্রুপে যোগ দিয়ে আলোচনা করতে পারে
+
 - শিক্ষামূলক রিসোর্স পড়তে পারে
 - শর্ট ভিডিও (রিলস) দেখতে এবং শেয়ার করতে পারে
 
@@ -31,7 +31,7 @@ GreenVerse একটি সম্পূর্ণ বাংলা ভাষায
 
 - **Feed**: হোম ফিডে ব্যবহারকারীদের পোস্ট, ছবি এবং আপডেট দেখুন
 - **Shop**: বাগানের জন্য প্রয়োজনীয় পণ্য ব্রাউজ করুন এবং কিনুন
-- **Groups**: কমিউনিটি গ্রুপে যোগ দিন এবং আলোচনায় অংশ নিন
+
 - **Library**: গার্ডেনিং সম্পর্কিত আর্টিকেল, গাইড এবং ভিডিও পড়ুন
 - **My Garden**: আপনার বাগানের গাছগুলোর ট্র্যাক রাখুন
 - **Reels**: শর্ট ভিডিও দেখুন এবং শেয়ার করুন
@@ -90,7 +90,7 @@ GreenVerse/
 │   │   │       ├── MainLayout.tsx    # Main layout wrapper
 │   │   │       └── RightSidebar.tsx  # Right sidebar
 │   │   ├── pages/
-│   │   │   ├── Group.tsx            # Groups page
+
 │   │   │   ├── Library.tsx          # Library/Resources page
 │   │   │   ├── Login.tsx            # Login page
 │   │   │   ├── MyGarden.tsx         # My Garden dashboard
@@ -179,7 +179,7 @@ npm run preview
 - `/` - হোম ফিড
 - `/reels` - রিলস/শর্ট ভিডিও
 - `/shop` - দোকান/ই-কমার্স
-- `/group` - গ্রুপ
+
 - `/library` - লাইব্রেরি/রিসোর্স
 - `/my-garden` - আমার বাগান ড্যাশবোর্ড
 - `/notifications` - বিজ্ঞপ্তি
@@ -218,10 +218,7 @@ npm run preview
   - Category filters
   - Product cards with details
 
-- **Group**: গ্রুপ পেজ
-  - Group listings
-  - Group cards with member count
-  - Join group functionality
+
 
 - **Library**: লাইব্রেরি পেজ
   - Resource listings

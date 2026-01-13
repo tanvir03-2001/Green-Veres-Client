@@ -3,7 +3,7 @@ import App from "../App";
 import Feed from "../components/Layout/Feed";
 import ShopPage from "../pages/Shop.tsx";
 import MyShopPage from "../pages/MyShop.tsx";
-import GroupPage from "../pages/Group.tsx";
+
 import LibraryPage from "../pages/Library.tsx";
 import MyGardenPage from "../pages/MyGarden.tsx";
 import ReelsPage from "../pages/Reels.tsx";
@@ -54,14 +54,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: "group",
-        element: (
-          <ProtectedRoute>
-            <GroupPage />
-          </ProtectedRoute>
-        ),
-      },
+
       {
         path: "library",
         element: (

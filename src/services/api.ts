@@ -388,39 +388,7 @@ export const sellerAPI = {
   },
 };
 
-// Groups API
-export const groupsAPI = {
-  getGroups: async () => {
-    return apiRequest('/groups', {
-      method: 'GET',
-    });
-  },
 
-  getGroupById: async (id: string) => {
-    return apiRequest(`/groups/${id}`, {
-      method: 'GET',
-    });
-  },
-
-  createGroup: async (groupData: { name: string; description: string; category?: string }) => {
-    return apiRequest('/groups', {
-      method: 'POST',
-      body: JSON.stringify(groupData),
-    });
-  },
-
-  joinGroup: async (id: string) => {
-    return apiRequest(`/groups/${id}/join`, {
-      method: 'POST',
-    });
-  },
-
-  leaveGroup: async (id: string) => {
-    return apiRequest(`/groups/${id}/leave`, {
-      method: 'POST',
-    });
-  },
-};
 
 // Library API
 export const libraryAPI = {
