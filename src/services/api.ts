@@ -1,5 +1,8 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+// Import notification service
+import { showSessionExpired, showNetworkError, showTokenRefreshed } from './notificationService';
+
 // Get access token from localStorage
 const getAccessToken = (): string | null => {
   return localStorage.getItem('accessToken');
@@ -35,37 +38,66 @@ const refreshAccessToken = async (): Promise<string | null> => {
         body: JSON.stringify({ refreshToken }),
       });
 
-      const data = await response.json();
+      // Handle response properly
+      const contentType = response.headers.get('content-type');
+      let data;
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        data = {
+          success: response.ok,
+          message: text || `HTTP ${response.status}: ${response.statusText}`
+        };
+      }
 
-      if (response.ok && data.success && data.data.accessToken) {
+      if (response.ok && data.success && data.data?.accessToken) {
         localStorage.setItem('accessToken', data.data.accessToken);
-        // Server returns only accessToken, but we need to rotate refresh token too
-        // In a real implementation, server should return new refresh token
-        // For now, we'll keep the same refresh token
+        // Store new refresh token if provided
+        if (data.data.refreshToken) {
+          localStorage.setItem('refreshToken', data.data.refreshToken);
+        }
+        // Show success notification
+        showTokenRefreshed();
         return data.data.accessToken;
       }
 
-      // Refresh failed due to invalid/expired refresh token
-      // Clear all auth data and redirect to login
+      // Handle specific error cases
+      const errorMessage = data.message || data.error || 'Token refresh failed';
+      
+      // Show notification for token expiry using notification service
+      showSessionExpired();
+
+      // Clear all auth data
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       
       // Redirect to login page
       if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1000);
       }
       
       return null;
     } catch (error) {
-      // Network error or server error
+      console.error('Token refresh error:', error);
+      
+      // Network error - show notification using notification service
+      showNetworkError();
+
+      // Clear auth data on network errors too
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       
       // Redirect to login page
       if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1000);
       }
       
       return null;
@@ -119,10 +151,23 @@ const apiRequest = async (
     }
   }
 
-  const data = await response.json();
+  // Handle non-JSON responses gracefully
+  const contentType = response.headers.get('content-type');
+  let data;
+  
+  if (contentType && contentType.includes('application/json')) {
+    data = await response.json();
+  } else {
+    // Handle non-JSON responses (like HTML error pages)
+    const text = await response.text();
+    data = {
+      success: response.ok,
+      message: text || `HTTP ${response.status}: ${response.statusText}`
+    };
+  }
 
   if (!response.ok) {
-    throw new Error(data.message || 'API request failed');
+    throw new Error(data.message || data.error || `HTTP ${response.status}: ${response.statusText}`);
   }
 
   return data;
