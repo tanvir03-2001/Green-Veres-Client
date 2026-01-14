@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import { sellerAPI, shopAPI } from '../services/api';
 import { uploadToCloudinary } from '../services/uploadHelper';
-import { Store, Plus, Edit, Trash2, Package, Star, TrendingUp, Upload, X } from 'lucide-react';
+import { Store, Plus, Edit, Trash2, Package, Star, TrendingUp, Upload, X, Heart } from 'lucide-react';
 
 type Shop = {
   _id: string;
@@ -30,6 +30,7 @@ type Product = {
   category: string;
   rating: number;
   reviewCount: number;
+  featured?: boolean;
 };
 
 const MyShopPage: FC = () => {
@@ -871,34 +872,70 @@ Please check:
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
-              <div key={product._id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100">
-                <div className="relative h-40 bg-gray-100">
+              <div key={product._id} className="w-full rounded-xl bg-white shadow-md overflow-hidden group">
+                {/* Image section */}
+                <div className="relative bg-gradient-to-br from-green-50 to-emerald-50 overflow-hidden">
+                  <button className="absolute top-2 right-2 rounded-full bg-white/80 p-1.5 backdrop-blur hover:bg-white transition-colors">
+                    <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
+                  </button>
+
                   <img
                     src={product.images[0] || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800'}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
+                  
+                  {/* Stock Badge */}
+                  {product.stock === 0 ? (
+                    <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                      <span className="px-3 py-1 bg-red-500 text-white font-bold rounded-lg text-xs">OUT OF STOCK</span>
+                    </div>
+                  ) : product.stock < 10 && (
+                    <div className="absolute bottom-2 right-2">
+                      <span className="px-2 py-1 text-xs font-semibold bg-orange-500 text-white rounded-full shadow-sm">
+                        {product.stock} left
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">{product.name}</h3>
-                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-lg font-bold text-green-700">৳{product.price}</span>
-                    <span className="text-sm text-gray-500">Stock: {product.stock}</span>
+
+                {/* Content section */}
+                <div className="p-3">
+                  <h3 className="text-sm font-semibold text-gray-900 truncate">
+                    {product.name}
+                  </h3>
+
+                  <p className="text-xs text-gray-600 mt-1 line-clamp-2 min-h-[2rem]">
+                    {product.description}
+                  </p>
+
+                  <div className="mt-2 flex gap-1 flex-wrap">
+                    <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-gray-600">
+                      {product.category}
+                    </span>
+                    {product.featured && (
+                      <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-green-600 border-green-300">
+                        FEATURED
+                      </span>
+                    )}
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => openEditProduct(product)}
-                      className="flex-1 px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteProduct(product._id)}
-                      className="px-3 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition"
-                    >
-                      Delete
-                    </button>
+
+                  <div className="mt-2 flex items-center justify-between">
+                    <p className="text-base font-bold text-gray-900">৳{product.price}</p>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => openEditProduct(product)}
+                        className="rounded-lg px-2 py-1 text-xs font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-colors"
+                      >
+                        Ed
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProduct(product._id)}
+                        className="rounded-lg px-2 py-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition-colors"
+                      >
+                        Del
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

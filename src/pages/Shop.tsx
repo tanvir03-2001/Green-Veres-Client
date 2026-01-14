@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { shopAPI } from '../services/api';
 import { useCart } from '../contexts/CartContext';
 import { useNavigate } from 'react-router';
-import { Search, Star, Package, Filter, X, Store, Tag, ShoppingCart, Zap } from 'lucide-react';
+import { Search, Star, Package, Filter, X, Store, Tag, ShoppingCart, Zap, Heart } from 'lucide-react';
 
 type Product = {
   _id?: string;
@@ -155,10 +155,14 @@ const ShopPage: FC = () => {
               <div
                 key={product._id}
                 onClick={() => setSelectedProduct(product)}
-                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border border-gray-100 cursor-pointer"
+                className="w-full rounded-xl bg-white shadow-md overflow-hidden group cursor-pointer hover:shadow-lg transition-all duration-200"
               >
-                {/* Product Image */}
-                <div className="relative h-48 bg-gradient-to-br from-green-50 to-emerald-50 overflow-hidden">
+                {/* Image section */}
+                <div className="relative bg-gradient-to-br from-green-50 to-emerald-50 overflow-hidden">
+                  <button className="absolute top-2 right-2 rounded-full bg-white/80 p-1.5 backdrop-blur hover:bg-white transition-colors">
+                    <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
+                  </button>
+                
                   <img
                     src={
                       product.images && product.images.length > 0
@@ -166,86 +170,81 @@ const ShopPage: FC = () => {
                         : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800'
                     }
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  
-                  {/* Badges */}
-                  <div className="absolute top-2 left-2 flex gap-1">
-                    {product.featured && (
-                      <span className="px-2 py-1 text-xs font-bold bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full">
-                        ⭐
-                      </span>
-                    )}
-                    <span className="px-2 py-1 text-xs font-semibold bg-white/80 text-green-700 rounded-full backdrop-blur-sm">
-                      {product.category}
-                    </span>
-                  </div>
-
+                                  
                   {/* Stock Badge */}
                   {product.stock === 0 ? (
                     <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                      <span className="px-4 py-2 bg-red-500 text-white font-bold rounded-lg text-sm">OUT OF STOCK</span>
+                      <span className="px-3 py-1 bg-red-500 text-white font-bold rounded-lg text-xs">OUT OF STOCK</span>
                     </div>
                   ) : product.stock < 10 && (
-                    <div className="absolute top-12 right-2">
+                    <div className="absolute bottom-2 right-2">
                       <span className="px-2 py-1 text-xs font-semibold bg-orange-500 text-white rounded-full shadow-sm">
                         {product.stock} left
                       </span>
                     </div>
                   )}
-
-                  {/* Favorite Heart Icon */}
-                  <button className="absolute top-2 right-2 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors">
-                    <svg className="w-4 h-4 text-gray-600 hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                  </button>
                 </div>
-
-                {/* Product Info */}
-                <div className="p-3 space-y-2">
-                  {/* Title */}
-                  <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem]">
+                
+                {/* Content section */}
+                <div className="p-3">
+                  <h3 className="text-sm font-semibold text-gray-900 truncate">
                     {product.name}
                   </h3>
-
-                  {/* Description */}
-                  <p className="text-xs text-gray-600 line-clamp-2 min-h-[2rem">{product.description}</p>
-
-                  {/* Rating & Seller */}
-                  <div className="flex items-center justify-between">
-                    {product.reviewCount > 0 ? (
-                      <div className="flex items-center gap-1">
-                        <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                        <span className="text-xs font-medium text-gray-900">{product.rating.toFixed(1)}</span>
-                      </div>
-                    ) : (
-                      <span className="text-xs text-gray-400">No reviews</span>
-                    )}
-                    {product.seller && (
-                      <div className="flex items-center gap-0.5 text-xs text-gray-500">
-                        <Store className="w-2.5 h-2.5" />
-                        <span className="line-clamp-1">{product.seller}</span>
-                      </div>
+                
+                  <p className="text-xs text-gray-600 mt-1 line-clamp-2 min-h-[2rem]">
+                    {product.description}
+                  </p>
+                
+                  <div className="mt-2 flex gap-1 flex-wrap">
+                    <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-gray-600">
+                      {product.category}
+                    </span>
+                    {product.featured && (
+                      <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-green-600 border-green-300">
+                        FEATURED
+                      </span>
                     )}
                   </div>
-
-                  {/* Price and Add to Cart */}
-                  <div className="flex items-center justify-between pt-1">
-                    <div>
-                      <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                        ৳{product.price}
-                      </span>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const productId = product._id || '';
-                        if (isInCart(productId)) {
-                          removeItem(productId);
-                        } else {
+                
+                  <div className="mt-2 flex items-center justify-between">
+                    <p className="text-base font-bold text-gray-900">৳{product.price}</p>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const productId = product._id || '';
+                          if (isInCart(productId)) {
+                            removeItem(productId);
+                          } else {
+                            const cartItem = {
+                              productId,
+                              name: product.name,
+                              price: product.price,
+                              image: product.images && product.images.length > 0 
+                                ? product.images[0]
+                                : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800',
+                              seller: product.seller
+                            };
+                            addItem(cartItem);
+                          }
+                        }}
+                        disabled={product.stock === 0}
+                        className={`rounded-lg px-2 py-1 text-xs font-semibold text-white transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-1 ${
+                          isInCart(product._id || '') 
+                            ? 'bg-red-500 hover:bg-red-600' 
+                            : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+                        }`}
+                      >
+                        <ShoppingCart className="w-3 h-3" />
+                        {/* {isInCart(product._id || '') ? 'R' : 'A'} */}
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
                           const cartItem = {
-                            productId,
+                            productId: product._id || '',
                             name: product.name,
                             price: product.price,
                             image: product.images && product.images.length > 0 
@@ -254,38 +253,15 @@ const ShopPage: FC = () => {
                             seller: product.seller
                           };
                           addItem(cartItem);
-                        }
-                      }}
-                      disabled={product.stock === 0}
-                      className={`px-3 py-1.5 text-xs font-medium rounded text-white transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed ${
-                        isInCart(product._id || '') 
-                          ? 'bg-red-500 hover:bg-red-600' 
-                          : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
-                      }`}
-                    >
-                      {isInCart(product._id || '') ? 'Remove from Cart' : 'Add to Cart'}
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const cartItem = {
-                          productId: product._id || '',
-                          name: product.name,
-                          price: product.price,
-                          image: product.images && product.images.length > 0 
-                            ? product.images[0]
-                            : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800',
-                          seller: product.seller
-                        };
-                        addItem(cartItem);
-                        navigate('/checkout');
-                      }}
-                      disabled={product.stock === 0}
-                      className="px-3 py-1.5 text-xs font-medium rounded bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
-                    >
-                      <Zap className="w-3 h-3" />
-                      Buy Now
-                    </button>
+                          navigate('/checkout');
+                        }}
+                        disabled={product.stock === 0}
+                        className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 px-2 py-1 text-xs font-semibold text-white hover:from-blue-600 hover:to-indigo-700 transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
+                      >
+                        <Zap className="w-3 h-3" />
+                        Buy
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
