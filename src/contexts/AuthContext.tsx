@@ -46,6 +46,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       const refreshToken = localStorage.getItem('refreshToken');
       
       if (!refreshToken) {
+        clearAuth();
         return false;
       }
 
@@ -54,15 +55,25 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       if (response.success && response.data.accessToken) {
         setAccessToken(response.data.accessToken);
         localStorage.setItem('accessToken', response.data.accessToken);
+        
+        // If server returns new refresh token, update it
+        if (response.data.refreshToken) {
+          localStorage.setItem('refreshToken', response.data.refreshToken);
+        }
+        
         return true;
       }
       
+      // Refresh token is invalid/expired
+      clearAuth();
       return false;
     } catch (error) {
       console.error('Token refresh failed:', error);
+      // Clear auth data on refresh failure
+      clearAuth();
       return false;
     }
-  }, []);
+  }, [clearAuth]);
 
   // Load user and verify authentication on mount
   useEffect(() => {

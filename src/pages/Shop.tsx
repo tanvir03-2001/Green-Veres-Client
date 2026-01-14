@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import { shopAPI } from '../services/api';
-import { ShoppingCart, Search, Star, Package, Filter, X, Store, Tag } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
+import { useNavigate } from 'react-router';
+import { Search, Star, Package, Filter, X, Store, Tag, ShoppingCart, Zap } from 'lucide-react';
 
 type Product = {
   _id?: string;
@@ -26,8 +28,16 @@ const ShopPage: FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'createdAt' | 'price' | 'rating'>('createdAt');
-  const [cartCount, setCartCount] = useState(0);
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  
+  const { state, addItem, removeItem } = useCart();
+  const navigate = useNavigate();
+
+  // Check if product is already in cart
+  const isInCart = (productId: string) => {
+    return state.items.some(item => item.productId === productId);
+  };
 
   useEffect(() => {
     loadProducts();
@@ -54,11 +64,6 @@ const ShopPage: FC = () => {
     }
   };
 
-  const addToCart = (product: Product) => {
-    setCartCount(cartCount + 1);
-    // TODO: Implement actual cart functionality
-    console.log('Added to cart:', product.name);
-  };
 
   return (
     <div className="min-h-full bg-gray-50">
@@ -70,14 +75,6 @@ const ShopPage: FC = () => {
               <h1 className="text-2xl font-bold text-gray-900">GreenVerse Shop</h1>
               <p className="text-sm text-gray-600">Everything for your garden</p>
             </div>
-            <button className="relative p-3 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-              <ShoppingCart className="w-6 h-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </button>
           </div>
 
           {/* Search Bar */}
@@ -243,12 +240,51 @@ const ShopPage: FC = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        addToCart(product);
+                        const productId = product._id || '';
+                        if (isInCart(productId)) {
+                          removeItem(productId);
+                        } else {
+                          const cartItem = {
+                            productId,
+                            name: product.name,
+                            price: product.price,
+                            image: product.images && product.images.length > 0 
+                              ? product.images[0]
+                              : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800',
+                            seller: product.seller
+                          };
+                          addItem(cartItem);
+                        }
                       }}
                       disabled={product.stock === 0}
-                      className="px-3 py-1.5 text-xs font-medium rounded bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
+                      className={`px-3 py-1.5 text-xs font-medium rounded text-white transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed ${
+                        isInCart(product._id || '') 
+                          ? 'bg-red-500 hover:bg-red-600' 
+                          : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+                      }`}
                     >
-                      Add
+                      {isInCart(product._id || '') ? 'Remove from Cart' : 'Add to Cart'}
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const cartItem = {
+                          productId: product._id || '',
+                          name: product.name,
+                          price: product.price,
+                          image: product.images && product.images.length > 0 
+                            ? product.images[0]
+                            : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800',
+                          seller: product.seller
+                        };
+                        addItem(cartItem);
+                        navigate('/checkout');
+                      }}
+                      disabled={product.stock === 0}
+                      className="px-3 py-1.5 text-xs font-medium rounded bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
+                    >
+                      <Zap className="w-3 h-3" />
+                      Buy Now
                     </button>
                   </div>
                 </div>
@@ -368,17 +404,61 @@ const ShopPage: FC = () => {
                       )}
                     </div>
 
-                    {/* Add to Cart Button */}
-                    <button
-                      onClick={() => {
-                        addToCart(selectedProduct);
-                        setSelectedProduct(null);
-                      }}
-                      disabled={selectedProduct.stock === 0}
-                      className="w-full px-6 py-4 text-lg font-bold rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 transition-all hover:scale-105 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg"
-                    >
-                      {selectedProduct.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                    </button>
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => {
+                          const productId = selectedProduct._id || '';
+                          if (isInCart(productId)) {
+                            removeItem(productId);
+                          } else {
+                            const cartItem = {
+                              productId,
+                              name: selectedProduct.name,
+                              price: selectedProduct.price,
+                              image: selectedProduct.images && selectedProduct.images.length > 0 
+                                ? selectedProduct.images[0]
+                                : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800',
+                              seller: selectedProduct.seller
+                            };
+                            addItem(cartItem);
+                          }
+                          setSelectedProduct(null);
+                        }}
+                        disabled={selectedProduct.stock === 0}
+                        className={`flex-1 px-6 py-4 text-lg font-bold rounded-xl transition-all hover:scale-105 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg ${
+                          isInCart(selectedProduct._id || '')
+                            ? 'bg-red-500 hover:bg-red-600 text-white'
+                            : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700'
+                        }`}
+                      >
+                        {selectedProduct.stock === 0 
+                          ? 'Out of Stock' 
+                          : isInCart(selectedProduct._id || '') 
+                            ? 'Remove from Cart' 
+                            : 'Add to Cart'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          const cartItem = {
+                            productId: selectedProduct._id || '',
+                            name: selectedProduct.name,
+                            price: selectedProduct.price,
+                            image: selectedProduct.images && selectedProduct.images.length > 0 
+                              ? selectedProduct.images[0]
+                              : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800',
+                            seller: selectedProduct.seller
+                          };
+                          addItem(cartItem);
+                          navigate('/checkout');
+                        }}
+                        disabled={selectedProduct.stock === 0}
+                        className="flex-1 px-6 py-4 text-lg font-bold rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all hover:scale-105 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg flex items-center justify-center gap-2"
+                      >
+                        <Zap className="w-5 h-5" />
+                        Buy Now
+                      </button>
+                    </div>
                   </div>
 
                   {/* Additional Info */}

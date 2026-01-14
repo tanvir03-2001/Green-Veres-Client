@@ -3,7 +3,8 @@ import App from "../App";
 import Feed from "../components/Layout/Feed";
 import ShopPage from "../pages/Shop.tsx";
 import MyShopPage from "../pages/MyShop.tsx";
-
+import CheckoutPage from "../pages/Checkout.tsx";
+import CartPage from "../pages/Cart.tsx";
 
 import ReelsPage from "../pages/Reels.tsx";
 import LoginPage from "../pages/Login.tsx";
@@ -44,6 +45,22 @@ export const router = createBrowserRouter([
       {
         path: "shop",
         element: <ShopPage />,
+      },
+      {
+        path: "checkout",
+        element: (
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "cart",
+        element: (
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "my-shop",

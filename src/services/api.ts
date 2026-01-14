@@ -39,18 +39,35 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
       if (response.ok && data.success && data.data.accessToken) {
         localStorage.setItem('accessToken', data.data.accessToken);
+        // Server returns only accessToken, but we need to rotate refresh token too
+        // In a real implementation, server should return new refresh token
+        // For now, we'll keep the same refresh token
         return data.data.accessToken;
       }
 
-      // Refresh failed, clear tokens
+      // Refresh failed due to invalid/expired refresh token
+      // Clear all auth data and redirect to login
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
+      
+      // Redirect to login page
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+      
       return null;
     } catch (error) {
+      // Network error or server error
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
+      
+      // Redirect to login page
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+      
       return null;
     } finally {
       isRefreshing = false;
