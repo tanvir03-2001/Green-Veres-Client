@@ -5,6 +5,7 @@ import ShopPage from "../pages/Shop.tsx";
 import MyShopPage from "../pages/MyShop.tsx";
 import CheckoutPage from "../pages/Checkout.tsx";
 import CartPage from "../pages/Cart.tsx";
+import ProductDetailsPage from "../pages/ProductDetails.tsx";
 
 import ReelsPage from "../pages/Reels.tsx";
 import LoginPage from "../pages/Login.tsx";
@@ -70,7 +71,10 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      
+      {
+        path: "product/:productId",
+        element: <ProductDetailsPage />, 
+      },
       {
         path: "notifications",
         element: (

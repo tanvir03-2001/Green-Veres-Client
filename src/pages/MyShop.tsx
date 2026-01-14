@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import { sellerAPI, shopAPI } from '../services/api';
 import { uploadToCloudinary } from '../services/uploadHelper';
 import { Store, Plus, Edit, Trash2, Package, Star, TrendingUp, Upload, X, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 type Shop = {
   _id: string;
@@ -44,7 +45,9 @@ const MyShopPage: FC = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState('');
-
+  
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     shopName: '',
     description: '',
@@ -872,7 +875,14 @@ Please check:
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
-              <div key={product._id} className="w-full rounded-xl bg-white shadow-md overflow-hidden group">
+              <div 
+                key={product._id}
+                onClick={() => {
+                  if (product._id) {
+                    navigate(`/product/${product._id}`);
+                  }
+                }}
+                className="w-full rounded-xl bg-white shadow-md overflow-hidden group cursor-pointer hover:shadow-lg transition-all duration-200">
                 {/* Image section */}
                 <div className="relative bg-gradient-to-br from-green-50 to-emerald-50 overflow-hidden">
                   <button className="absolute top-2 right-2 rounded-full bg-white/80 p-1.5 backdrop-blur hover:bg-white transition-colors">
@@ -924,13 +934,19 @@ Please check:
                     <p className="text-base font-bold text-gray-900">৳{product.price}</p>
                     <div className="flex gap-1">
                       <button
-                        onClick={() => openEditProduct(product)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditProduct(product);
+                        }}
                         className="rounded-lg px-2 py-1 text-xs font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-colors"
                       >
                         Ed
                       </button>
                       <button
-                        onClick={() => handleDeleteProduct(product._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteProduct(product._id);
+                        }}
                         className="rounded-lg px-2 py-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition-colors"
                       >
                         Del
