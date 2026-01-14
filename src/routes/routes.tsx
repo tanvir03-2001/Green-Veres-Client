@@ -4,8 +4,7 @@ import Feed from "../components/Layout/Feed";
 import ShopPage from "../pages/Shop.tsx";
 import MyShopPage from "../pages/MyShop.tsx";
 
-import LibraryPage from "../pages/Library.tsx";
-import MyGardenPage from "../pages/MyGarden.tsx";
+
 import ReelsPage from "../pages/Reels.tsx";
 import LoginPage from "../pages/Login.tsx";
 import SignupPage from "../pages/Signup.tsx";
@@ -54,23 +53,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-
-      {
-        path: "library",
-        element: (
-          <ProtectedRoute>
-            <LibraryPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "my-garden",
-        element: (
-          <ProtectedRoute>
-            <MyGardenPage />
-          </ProtectedRoute>
-        ),
-      },
+      
       {
         path: "notifications",
         element: (

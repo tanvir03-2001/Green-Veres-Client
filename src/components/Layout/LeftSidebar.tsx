@@ -64,36 +64,6 @@ const LeftSidebar: FC = () => {
             <span className="font-medium">My Shop</span>
           </NavLink>
 
-
-
-          <NavLink
-            to="/library"
-            className={({ isActive }: { isActive: boolean }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
-              }`
-            }
-          >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-            </svg>
-            <span className="font-medium">Library</span>
-          </NavLink>
-
-          <NavLink
-            to="/my-garden"
-            className={({ isActive }: { isActive: boolean }) =>
-              `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                isActive ? 'bg-green-50 text-green-700' : 'text-gray-700 hover:bg-gray-100'
-              }`
-            }
-          >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span className="font-medium">My Garden</span>
-          </NavLink>
         </nav>
 
         {/* Divider */}

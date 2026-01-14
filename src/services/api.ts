@@ -390,21 +390,6 @@ export const sellerAPI = {
 
 
 
-// Library API
-export const libraryAPI = {
-  getResources: async () => {
-    return apiRequest('/library', {
-      method: 'GET',
-    });
-  },
-
-  getResourceById: async (id: string) => {
-    return apiRequest(`/library/${id}`, {
-      method: 'GET',
-    });
-  },
-};
-
 // Notifications API
 export const notificationsAPI = {
   getNotifications: async () => {
