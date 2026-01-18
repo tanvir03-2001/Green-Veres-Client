@@ -67,38 +67,56 @@ const ShopPage: FC = () => {
 
   return (
     <div className="min-h-full bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between gap-4 mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">GreenVerse Shop</h1>
-              <p className="text-sm text-gray-600">Everything for your garden</p>
+      {/* Compact Header */}
+      <div className="bg-white border-b sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-2">
+          {/* Compact Title and Search Row */}
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-5 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full"></div>
+              <div>
+                <h1 className="text-lg font-bold text-gray-900">GreenVerse Shop</h1>
+                <p className="text-xs text-gray-500 hidden sm:block">Everything for your garden</p>
+              </div>
+            </div>
+            
+            {/* Compact Search Bar */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Compact Sort Filter */}
+            <div className="flex items-center gap-1.5 bg-gray-50 rounded-lg px-2.5 py-1.5">
+              <Filter className="w-3.5 h-3.5 text-green-600" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'createdAt' | 'price' | 'rating')}
+                className="text-xs bg-transparent focus:outline-none cursor-pointer text-gray-700"
+              >
+                <option value="createdAt">Newest</option>
+                <option value="price">Price</option>
+                <option value="rating">Rating</option>
+              </select>
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* Category Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2">
+          {/* Compact Category Chips */}
+          <div className="flex flex-wrap gap-1.5">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
                   selectedCategory === category
-                    ? 'bg-green-600 text-white shadow-sm'
-                    : 'bg-white text-gray-700 border border-gray-200 hover:border-green-300 hover:text-green-700'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
                 {category}
@@ -108,49 +126,65 @@ const ShopPage: FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Sort and Filter */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-sm text-gray-600">
-            {loading ? 'Loading...' : `${products.length} products found`}
-          </p>
+      <div className="max-w-7xl mx-auto px-4 py-3">
+        {/* Compact Results Info */}
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-500" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'createdAt' | 'price' | 'rating')}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              <option value="createdAt">Newest</option>
-              <option value="price">Price: Low to High</option>
-              <option value="rating">Top Rated</option>
-            </select>
+            <p className="text-sm text-gray-600">
+              {loading ? 'Loading...' : `${products.length} products`}
+            </p>
+            {selectedCategory !== 'All' && (
+              <span className="px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
+                {selectedCategory}
+              </span>
+            )}
+          </div>
+          <div className="hidden sm:flex items-center gap-1 text-xs text-gray-500">
+            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+            <span>Quality</span>
           </div>
         </div>
 
         {/* Products Grid */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-              <p className="text-gray-500">Loading products...</p>
+            <div className="text-center bg-white rounded-2xl p-8 shadow-sm border border-gray-100 max-w-xs w-full">
+              <div className="relative inline-block mb-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 mx-auto"></div>
+                <div className="absolute top-0 left-0 animate-spin rounded-full h-12 w-12 border-4 border-t-green-600 border-r-transparent border-b-transparent border-l-transparent"></div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Loading Products</h3>
+              <p className="text-gray-500 text-sm">Finding the best gardening essentials for you...</p>
             </div>
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-20">
-            <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg font-semibold mb-2">No products found</p>
-            {selectedCategory !== 'All' || searchQuery ? (
-              <p className="text-sm text-gray-400">Try adjusting your filters or search terms</p>
-            ) : (
-              <div className="space-y-2">
-                <p className="text-sm text-gray-400">No shops have added products yet</p>
-                <p className="text-xs text-gray-400">Be the first to create a shop and add products!</p>
+          <div className="flex items-center justify-center py-16">
+            <div className="text-center bg-white rounded-2xl p-8 shadow-sm border border-gray-100 max-w-md w-full">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-50 mb-4">
+                <Package className="w-8 h-8 text-green-600" />
               </div>
-            )}
+              <h3 className="text-xl font-bold text-gray-800 mb-2">No Products Found</h3>
+              <p className="text-gray-600 mb-6">
+                {selectedCategory !== 'All' || searchQuery 
+                  ? 'Try adjusting your filters or search terms' 
+                  : 'No shops have added products yet. Be the first to create a shop!'
+                }
+              </p>
+              {(selectedCategory !== 'All' || searchQuery) && (
+                <button 
+                  onClick={() => {
+                    setSelectedCategory('All');
+                    setSearchQuery('');
+                  }}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                >
+                  View All Products
+                </button>
+              )}
+            </div>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
               <div
                 key={product._id}
@@ -159,12 +193,12 @@ const ShopPage: FC = () => {
                     navigate(`/product/${product._id}`);
                   }
                 }}
-                className="w-full rounded-xl bg-white shadow-md overflow-hidden group cursor-pointer hover:shadow-lg transition-all duration-200"
+                className="rounded-xl bg-white border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-lg hover:border-gray-200 transition-all duration-200"
               >
                 {/* Image section */}
-                <div className="relative bg-gradient-to-br from-green-50 to-emerald-50 overflow-hidden">
-                  <button className="absolute top-2 right-2 rounded-full bg-white/80 p-1.5 backdrop-blur hover:bg-white transition-colors">
-                    <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
+                <div className="relative bg-gradient-to-br from-green-50 to-emerald-50">
+                  <button className="absolute top-2.5 right-2.5 rounded-full bg-white/90 p-1.5 backdrop-blur-sm hover:bg-white transition-all shadow-sm">
+                    <Heart className="h-3.5 w-3.5 text-gray-500 hover:text-red-500 transition-colors" />
                   </button>
                 
                   <img
@@ -174,16 +208,16 @@ const ShopPage: FC = () => {
                         : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800'
                     }
                     alt={product.name}
-                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                                   
                   {/* Stock Badge */}
                   {product.stock === 0 ? (
-                    <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                      <span className="px-3 py-1 bg-red-500 text-white font-bold rounded-lg text-xs">OUT OF STOCK</span>
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <span className="px-2.5 py-1 bg-red-500 text-white font-bold rounded text-xs">OUT OF STOCK</span>
                     </div>
                   ) : product.stock < 10 && (
-                    <div className="absolute bottom-2 right-2">
+                    <div className="absolute bottom-2.5 right-2.5">
                       <span className="px-2 py-1 text-xs font-semibold bg-orange-500 text-white rounded-full shadow-sm">
                         {product.stock} left
                       </span>
@@ -192,29 +226,29 @@ const ShopPage: FC = () => {
                 </div>
                 
                 {/* Content section */}
-                <div className="p-3">
-                  <h3 className="text-sm font-semibold text-gray-900 truncate">
+                <div className="p-3.5">
+                  <h3 className="font-semibold text-gray-900 truncate text-sm leading-tight">
                     {product.name}
                   </h3>
                 
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-2 min-h-[2rem]">
+                  <p className="text-xs text-gray-600 mt-1.5 line-clamp-2 h-10">
                     {product.description}
                   </p>
                 
-                  <div className="mt-2 flex gap-1 flex-wrap">
-                    <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-gray-600">
+                  <div className="mt-2.5 flex gap-1.5 flex-wrap">
+                    <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
                       {product.category}
                     </span>
                     {product.featured && (
-                      <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-green-600 border-green-300">
+                      <span className="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
                         FEATURED
                       </span>
                     )}
                   </div>
                 
-                  <div className="mt-2 flex items-center justify-between">
-                    <p className="text-base font-bold text-gray-900">৳{product.price}</p>
-                    <div className="flex gap-1">
+                  <div className="mt-3 flex items-center justify-between">
+                    <p className="text-lg font-bold text-gray-900">৳{product.price}</p>
+                    <div className="flex gap-1.5">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -235,14 +269,13 @@ const ShopPage: FC = () => {
                           }
                         }}
                         disabled={product.stock === 0}
-                        className={`rounded-lg px-2 py-1 text-xs font-semibold text-white transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-1 ${
+                        className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 shadow-sm ${
                           isInCart(product._id || '') 
                             ? 'bg-red-500 hover:bg-red-600' 
-                            : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+                            : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:shadow-md'
                         }`}
                       >
                         <ShoppingCart className="w-3 h-3" />
-                        {/* {isInCart(product._id || '') ? 'R' : 'A'} */}
                       </button>
                       <button
                         onClick={(e) => {
@@ -260,7 +293,7 @@ const ShopPage: FC = () => {
                           navigate('/checkout');
                         }}
                         disabled={product.stock === 0}
-                        className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 px-2 py-1 text-xs font-semibold text-white hover:from-blue-600 hover:to-indigo-700 transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
+                        className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:from-blue-600 hover:to-indigo-700 transition-all disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center gap-1 shadow-sm hover:shadow-md"
                       >
                         <Zap className="w-3 h-3" />
                         Buy

@@ -300,10 +300,10 @@ Please check:
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-full">
+      <div className="flex items-center justify-center min-h-64">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-3 border-green-600 mx-auto mb-2"></div>
+          <p className="text-gray-500 text-sm">Loading...</p>
         </div>
       </div>
     );
@@ -428,20 +428,20 @@ Please check:
   // No shop created yet
   if (!shop && !showCreateForm) {
     return (
-      <div className="min-h-full bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Store className="w-10 h-10 text-green-600" />
+      <div className="min-h-64 bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-sm w-full bg-white rounded-xl shadow p-6 text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Store className="w-8 h-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Start Your Shop</h2>
-          <p className="text-gray-600 mb-6">
-            Create your own shop and start selling gardening products to the GreenVerse community!
+          <h2 className="text-lg font-bold text-gray-900 mb-2">Start Your Shop</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Create your own shop and start selling gardening products!
           </p>
           <button
             onClick={() => setShowCreateForm(true)}
-            className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all"
+            className="w-full px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
           >
-            Create My Shop
+            Create Shop
           </button>
         </div>
       </div>
@@ -776,11 +776,11 @@ Please check:
     <div className="min-h-full bg-gray-50">
       {/* Shop Banner */}
       {shop.banner && (
-        <div className="relative w-full h-48 md:h-64 bg-gradient-to-r from-green-400 to-emerald-500 overflow-hidden">
+        <div className="relative w-full h-32 md:h-40 bg-gradient-to-r from-green-400 to-emerald-500 overflow-hidden">
           <img 
             src={shop.banner} 
             alt="Shop Banner" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover absolute inset-0"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
         </div>
@@ -788,92 +788,92 @@ Please check:
       
       {/* Shop Header */}
       <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center gap-3">
               {shop.logo && (
-                <img src={shop.logo} alt={shop.shopName} className="w-16 h-16 rounded-lg object-cover" />
+                <img src={shop.logo} alt={shop.shopName} className="w-12 h-12 rounded-lg object-cover" />
               )}
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{shop.shopName}</h1>
-                <p className="text-sm text-gray-600">{shop.description}</p>
-                {shop.address && <p className="text-xs text-gray-500 mt-1">{shop.address}</p>}
+                <h1 className="text-lg font-bold text-gray-900">{shop.shopName}</h1>
+                <p className="text-xs text-gray-600 line-clamp-1">{shop.description}</p>
+                {shop.address && <p className="text-xs text-gray-500">{shop.address}</p>}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1">
               <button
                 onClick={openEditShop}
-                className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
+                className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
               >
-                <Edit className="w-5 h-5" />
+                <Edit className="w-4 h-4" />
               </button>
               <button
                 onClick={handleDeleteShop}
-                className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
               >
-                <Trash2 className="w-5 h-5" />
+                <Trash2 className="w-4 h-4" />
               </button>
             </div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="flex items-center gap-2 text-green-700 mb-1">
-                <Package className="w-4 h-4" />
-                <span className="text-xs font-medium">Products</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="bg-green-50 p-2.5 rounded-lg">
+              <div className="flex items-center gap-1.5 text-green-700 mb-0.5">
+                <Package className="w-3 h-3" />
+                <span className="text-xs font-medium text-green-600">Products</span>
               </div>
-              <p className="text-2xl font-bold text-green-900">{shop.totalProducts}</p>
+              <p className="text-sm font-bold text-green-900">{shop.totalProducts}</p>
             </div>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700 mb-1">
-                <TrendingUp className="w-4 h-4" />
-                <span className="text-xs font-medium">Sales</span>
+            <div className="bg-blue-50 p-2.5 rounded-lg">
+              <div className="flex items-center gap-1.5 text-blue-700 mb-0.5">
+                <TrendingUp className="w-3 h-3" />
+                <span className="text-xs font-medium text-blue-600">Sales</span>
               </div>
-              <p className="text-2xl font-bold text-blue-900">{shop.totalSales}</p>
+              <p className="text-sm font-bold text-blue-900">{shop.totalSales}</p>
             </div>
-            <div className="bg-yellow-50 p-4 rounded-lg">
-              <div className="flex items-center gap-2 text-yellow-700 mb-1">
-                <Star className="w-4 h-4" />
-                <span className="text-xs font-medium">Rating</span>
+            <div className="bg-yellow-50 p-2.5 rounded-lg">
+              <div className="flex items-center gap-1.5 text-yellow-700 mb-0.5">
+                <Star className="w-3 h-3" />
+                <span className="text-xs font-medium text-yellow-600">Rating</span>
               </div>
-              <p className="text-2xl font-bold text-yellow-900">{shop.rating.toFixed(1)}</p>
+              <p className="text-sm font-bold text-yellow-900">{shop.rating.toFixed(1)}</p>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="flex items-center gap-2 text-purple-700 mb-1">
-                <Star className="w-4 h-4" />
-                <span className="text-xs font-medium">Reviews</span>
+            <div className="bg-purple-50 p-2.5 rounded-lg">
+              <div className="flex items-center gap-1.5 text-purple-700 mb-0.5">
+                <Star className="w-3 h-3" />
+                <span className="text-xs font-medium text-purple-600">Reviews</span>
               </div>
-              <p className="text-2xl font-bold text-purple-900">{shop.reviewCount}</p>
+              <p className="text-sm font-bold text-purple-900">{shop.reviewCount}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Products Section */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">My Products</h2>
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-gray-900">My Products</h2>
           <button
             onClick={() => {
               resetProductForm();
               setShowProductForm(true);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
           >
-            <Plus className="w-5 h-5" />
-            Add Product
+            <Plus className="w-4 h-4" />
+            Add
           </button>
         </div>
 
         {products.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-xl">
-            <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg mb-2">No products yet</p>
-            <p className="text-sm text-gray-400">Start adding products to your shop</p>
+          <div className="text-center py-12 bg-white rounded-lg">
+            <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500 text-sm mb-1">No products yet</p>
+            <p className="text-xs text-gray-400">Start adding products to your shop</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
               <div 
                 key={product._id}
@@ -882,27 +882,27 @@ Please check:
                     navigate(`/product/${product._id}`);
                   }
                 }}
-                className="w-full rounded-xl bg-white shadow-md overflow-hidden group cursor-pointer hover:shadow-lg transition-all duration-200">
+                className="w-full rounded-lg bg-white shadow-sm overflow-hidden group cursor-pointer hover:shadow-md transition-all duration-200 border border-gray-100">
                 {/* Image section */}
                 <div className="relative bg-gradient-to-br from-green-50 to-emerald-50 overflow-hidden">
-                  <button className="absolute top-2 right-2 rounded-full bg-white/80 p-1.5 backdrop-blur hover:bg-white transition-colors">
-                    <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
+                  <button className="absolute top-1.5 right-1.5 rounded-full bg-white/80 p-1 backdrop-blur hover:bg-white transition-colors">
+                    <Heart className="h-3.5 w-3.5 text-gray-600 hover:text-red-500 transition-colors" />
                   </button>
 
                   <img
                     src={product.images[0] || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800'}
                     alt={product.name}
-                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   
                   {/* Stock Badge */}
                   {product.stock === 0 ? (
-                    <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                      <span className="px-3 py-1 bg-red-500 text-white font-bold rounded-lg text-xs">OUT OF STOCK</span>
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <span className="px-2 py-0.5 bg-red-500 text-white font-bold rounded text-xs">OUT OF STOCK</span>
                     </div>
                   ) : product.stock < 10 && (
-                    <div className="absolute bottom-2 right-2">
-                      <span className="px-2 py-1 text-xs font-semibold bg-orange-500 text-white rounded-full shadow-sm">
+                    <div className="absolute bottom-1.5 right-1.5">
+                      <span className="px-1.5 py-0.5 text-xs font-semibold bg-orange-500 text-white rounded-full">
                         {product.stock} left
                       </span>
                     </div>
@@ -910,35 +910,35 @@ Please check:
                 </div>
 
                 {/* Content section */}
-                <div className="p-3">
-                  <h3 className="text-sm font-semibold text-gray-900 truncate">
+                <div className="p-2.5">
+                  <h3 className="text-xs font-semibold text-gray-900 truncate">
                     {product.name}
                   </h3>
 
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-2 min-h-[2rem]">
+                  <p className="text-xs text-gray-600 mt-1 line-clamp-2 h-8">
                     {product.description}
                   </p>
 
-                  <div className="mt-2 flex gap-1 flex-wrap">
-                    <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-gray-600">
+                  <div className="mt-1.5 flex gap-1 flex-wrap">
+                    <span className="rounded border px-1 py-0.5 text-[10px] font-medium text-gray-600">
                       {product.category}
                     </span>
                     {product.featured && (
-                      <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium text-green-600 border-green-300">
+                      <span className="rounded border px-1 py-0.5 text-[10px] font-medium text-green-600 border-green-300">
                         FEATURED
                       </span>
                     )}
                   </div>
 
-                  <div className="mt-2 flex items-center justify-between">
-                    <p className="text-base font-bold text-gray-900">৳{product.price}</p>
+                  <div className="mt-1.5 flex items-center justify-between">
+                    <p className="text-sm font-bold text-gray-900">৳{product.price}</p>
                     <div className="flex gap-1">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           openEditProduct(product);
                         }}
-                        className="rounded-lg px-2 py-1 text-xs font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-colors"
+                        className="rounded-lg px-1.5 py-1 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 transition-colors"
                       >
                         Ed
                       </button>
@@ -947,7 +947,7 @@ Please check:
                           e.stopPropagation();
                           handleDeleteProduct(product._id);
                         }}
-                        className="rounded-lg px-2 py-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition-colors"
+                        className="rounded-lg px-1.5 py-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition-colors"
                       >
                         Del
                       </button>

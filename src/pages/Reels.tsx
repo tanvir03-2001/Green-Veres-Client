@@ -188,25 +188,25 @@ const ReelsPage: FC = () => {
   };
   return (
     <div className="min-h-full bg-gradient-to-br from-gray-50 to-green-50">
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                GreenVerse Reels
+              <h1 className="text-lg font-bold text-gray-900">
+                Reels
               </h1>
             </div>
             
             <button 
               onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-full bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 hover:scale-105"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Create
@@ -215,17 +215,17 @@ const ReelsPage: FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 py-3 space-y-4">
         {/* Category Filter */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
           {["All", "Tutorials", "Tips", "Transformation", "New"].map((chip) => (
             <button
               key={chip}
               onClick={() => handleCategoryChange(chip)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 selectedCategory === chip
-                  ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30"
-                  : "bg-white text-gray-700 border border-gray-200 hover:border-green-300 hover:shadow-md"
+                  ? "bg-green-600 text-white"
+                  : "bg-white text-gray-700 border border-gray-200 hover:border-green-300"
               }`}
             >
               {chip}
@@ -235,17 +235,17 @@ const ReelsPage: FC = () => {
 
         {/* Reels Grid */}
         {isLoading ? (
-          <div className="flex justify-center items-center py-16">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-gray-600 text-sm">Loading reels...</p>
+          <div className="flex justify-center items-center py-12">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-8 h-8 border-3 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-gray-600 text-sm">Loading...</p>
             </div>
           </div>
         ) : error ? (
-          <div className="flex justify-center items-center py-16">
-            <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-md">
+          <div className="flex justify-center items-center py-12">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-w-sm">
               <div className="flex items-center gap-2 text-red-600">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
                 <p className="font-medium text-sm">{error}</p>
@@ -253,23 +253,23 @@ const ReelsPage: FC = () => {
             </div>
           </div>
         ) : reels.length === 0 ? (
-          <div className="flex justify-center items-center py-16">
-            <div className="text-center max-w-sm">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center">
-                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex justify-center items-center py-12">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">No reels yet</h3>
-              <p className="text-gray-600 text-sm mb-4">Be the first to share your gardening journey!</p>
+              <h3 className="text-base font-bold text-gray-900 mb-1">No reels yet</h3>
+              <p className="text-gray-600 text-xs mb-3">Share your gardening journey!</p>
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                Create Your First Reel
+                Create Reel
               </button>
             </div>
           </div>
